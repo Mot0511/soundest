@@ -13,11 +13,10 @@ import { FaPause } from "react-icons/fa";
 const player = ({data, next, previous}: PlayerType) => {
 
     const [isPlaying, setIsPlaying] = useState(false);  
-    const [seconds, setSeconds] = useState<number>();
-
     const audioRef = useRef()
+    const [seconds, setSeconds] = useState<number>(0);
+    const [duration, setDuration] = useState<number>(1);
     const progressBarRef = useRef()
-    console.log(audioRef);
 
     const play = () => {
         if (isPlaying) {
@@ -30,12 +29,22 @@ const player = ({data, next, previous}: PlayerType) => {
       };
     
     const rewind = () => {
-
+        audioRef.current.currentTime = progressBarRef.current.value;
+        setSeconds(progressBarRef.current?.value)
     }
+    useEffect(() => {
+        const interval = setInterval(() => {
+            progressBarRef.current.value = audioRef.current.currentTime
+        })
+        return () => clearInterval(interval)
+    }, [])
+    useEffect(() => {
+        setDuration(audioRef.current.duration)
+    }, [audioRef.current?.duration])
 
     return (
         <div className={cl.player}>
-            <audio src={data.url} currentTime='20sec' ref={audioRef} />
+            <audio src={data.url} currentTime='20sec' ref={audioRef}/>
             <button className="resetBtn" onClick={previous}>
                 <IconContext.Provider value={{ size: "3.5em", color: "#27AE60" }}>
                     <BiSkipPrevious />
@@ -60,7 +69,10 @@ const player = ({data, next, previous}: PlayerType) => {
           <input 
             type="range" 
             className={cl.progress}
+            value={seconds}
             onChange={rewind}
+            min="0"
+            max={duration}
             ref={progressBarRef}
           />
         </div>
