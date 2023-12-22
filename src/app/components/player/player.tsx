@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import cl from './player.module.sass'
 import useSound from "use-sound"; //для работы со звуком
 import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai"; // иконки для воспроизведения и паузы
@@ -12,45 +12,37 @@ import { FaPause } from "react-icons/fa";
 
 const player = ({data, next, previous}: PlayerType) => {
 
+    const [play, { pause, duration, sound }] = useSound(data.url);
     const [isPlaying, setIsPlaying] = useState(false);  
-    const audioRef = useRef()
-    const [seconds, setSeconds] = useState<number>(0);
-    const [duration, setDuration] = useState<number>(1);
-    const progressBarRef = useRef()
+    const [seconds, setSeconds] = useState<number>();
 
-    const play = () => {
+    const playing = () => {
         if (isPlaying) {
-          audioRef.current?.pause()
+          pause(); // приостанавливаем воспроизведение звука
           setIsPlaying(false);
         } else {
-          audioRef.current?.play()
+          play(); // воспроизводим аудиозапись
           setIsPlaying(true);
         }
       };
-    
-    const rewind = () => {
-        audioRef.current.currentTime = progressBarRef.current.value;
-        setSeconds(progressBarRef.current?.value)
-    }
     useEffect(() => {
         const interval = setInterval(() => {
-            progressBarRef.current.value = audioRef.current.currentTime
-        })
+            if (sound){
+                setSeconds(sound.seek([]))
+            }
+        }, 1000)
         return () => clearInterval(interval)
-    }, [])
-    useEffect(() => {
-        setDuration(audioRef.current.duration)
-    }, [audioRef.current?.duration])
+    }, [sound])
+    
 
     return (
         <div className={cl.player}>
-            <audio src={data.url} currentTime='20sec' ref={audioRef}/>
             <button className="resetBtn" onClick={previous}>
                 <IconContext.Provider value={{ size: "3.5em", color: "#27AE60" }}>
                     <BiSkipPrevious />
                 </IconContext.Provider>
             </button>
-            <button className='resetBtn' onClick={play}>
+            <button className='resetBtn' onClick={playing}>
                 <IconContext.Provider value={{ size: "1.8em", color: "#27AE60" }}>
                     {
                         isPlaying
@@ -64,16 +56,21 @@ const player = ({data, next, previous}: PlayerType) => {
                     <BiSkipNext />
                 </IconContext.Provider>
             </button>
-          <p className={cl.title}>{data.title}</p>
-          <p>{data.author}</p>
+            <div className={cl.dataContainer}>
+                <p className={cl.title}>{data.title}</p>
+            </div>
+            <div className={cl.dataContainer}>
+            <p className={cl.author}>{data.author}</p>
+          </div>
           <input 
             type="range" 
             className={cl.progress}
-            value={seconds}
-            onChange={rewind}
             min="0"
-            max={duration}
-            ref={progressBarRef}
+            max={duration / 1000}
+            value={seconds}
+            onChange={(e) => {
+                sound.seek([seconds])
+            }}
           />
         </div>
     );
