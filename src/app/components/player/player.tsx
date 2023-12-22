@@ -28,18 +28,12 @@ const player = ({data, next, previous}: PlayerType) => {
     useEffect(() => {
         const interval = setInterval(() => {
             if (sound){
-                console.log(typeof sound.seek([]))
                 setSeconds(sound.seek([]))
             }
         }, 1000)
         return () => clearInterval(interval)
     }, [sound])
     
-    useEffect(() => {
-        if (sound){
-            sound.seek([seconds])
-        }
-    }, [seconds])
 
     return (
         <div className={cl.player}>
@@ -62,8 +56,12 @@ const player = ({data, next, previous}: PlayerType) => {
                     <BiSkipNext />
                 </IconContext.Provider>
             </button>
-          <p className={cl.title}>{data.title}</p>
-          <p>{data.author}</p>
+            <div className={cl.dataContainer}>
+                <p className={cl.title}>{data.title}</p>
+            </div>
+            <div className={cl.dataContainer}>
+            <p className={cl.author}>{data.author}</p>
+          </div>
           <input 
             type="range" 
             className={cl.progress}
@@ -71,7 +69,7 @@ const player = ({data, next, previous}: PlayerType) => {
             max={duration / 1000}
             value={seconds}
             onChange={(e) => {
-                setSeconds(Number(e.target.value))
+                sound.seek([seconds])
             }}
           />
         </div>

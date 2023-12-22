@@ -19,7 +19,6 @@ body{
     background-color:  black;
     height: 100vh;
     display: flex;
-    overflow-y: hidden
 }
 a:hover{
     color: lightgrey;
