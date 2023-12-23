@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cl from './page.module.sass'
 import Item from './components/item/item'
 import ItemType from './types/ItemType';
@@ -11,37 +11,48 @@ import { storage } from './services/getApp';
 
 const page = () => {
 
-    const [url, setUrl] = useState<string>('https://firebasestorage.googleapis.com/v0/b/soundest-95e52.appspot.com/o/Mot0511%2F1.mp3?alt=media&token=7f7e3ed3-8aaf-4288-abad-946e649f0c02')
+    const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
 
     const [items, setItems] = useState<ItemType[]>([
         {
             id: 0,
-            title: 'Zeit zu gehen',
-            author: 'Unheilig'
+            title: 'Six feet underground',
+            author: 'Lord Of The Lost'
         },
         {
             id: 1,
-            title: 'Six feet underground',
-            author: 'Lord Of The Lost'
-        }
+            title: 'Zeit zu gehen',
+            author: 'Unheilig'
+        },
+        
     ])
+    useEffect(() => {
+        getUrl(items[0].id)
+        
+    }, [])
 
-    const next = () => {
-        if (step < items.length - 1){
-            getUrl(items[step + 1].id)
-            setStep(step + 1)
+    const leaf = (side: boolean) => {
+        let newStep = 0
+        if (side){
+            if (step < items.length - 1){
+                newStep = step + 1
+            }
+        } else{
+            if (step > 0){
+                newStep = step - 1
+            }
         }
-    }   
-    const previous = () => {
-        if (step > 0){
-            getUrl(items[step - 1].id)
-            setStep(step - 1)
-        }
+        const newSong = items[newStep]
+        getUrl(newSong.id)
+        setStep(newStep)
     }
+
     const getUrl = (id: number) => {
         getDownloadURL(ref(storage, `/Mot0511/${id}.mp3`))
-            .then(url => setUrl(url))
+            .then(url =>{ 
+                setUrl(url)
+            })
     }
 
     return (
@@ -53,7 +64,7 @@ const page = () => {
                 }
             </div>
             <div className={cl.playerContainer}>
-                <Player data={{...items[step], url}} next={next} previous={previous} />
+                <Player data={{...items[step], url}} leaf={leaf} />
             </div>
         </>
     );

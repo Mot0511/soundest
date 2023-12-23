@@ -47,7 +47,7 @@ const player = ({data, leaf}: PlayerType) => {
     useEffect(() => {
         setIsPlaying(true)
     },[data.url])
-    
+
     return (
         <div className={cl.player}>
             <audio src={data.url} currentTime='20sec' ref={audioRef}/>
@@ -71,10 +71,10 @@ const player = ({data, leaf}: PlayerType) => {
                 </IconContext.Provider>
             </button>
             <div className={cl.dataContainer}>
-                <p className={cl.title}>{data.title}</p>
+                <p className={cl.title + ' ' + (data.title.length > 15 ? cl.animation : '')}>{data.title}</p>
             </div>
             <div className={cl.dataContainer}>
-            <p className={cl.author}>{data.author}</p>
+            <p className={cl.author + ' ' + (data.title.length > 20 ? cl.animation : '')}>{data.author}</p>
           </div>
           <input 
             type="range" 

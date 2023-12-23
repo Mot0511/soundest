@@ -1,3 +1,5 @@
+import { useRef } from "react"
+
 export default interface {
     data: {
         id: number
@@ -5,6 +7,5 @@ export default interface {
         title: string
         author: string
     }
-    next: () => void
-    previous: () => void
+    leaf: (side: boolean) => void
 }
