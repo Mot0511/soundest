@@ -40,7 +40,7 @@ const player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
     useEffect(() => {
         if (seconds == duration){
             console.log(1);
-            leaf(true, true)
+            leaf()
         }
     }, [seconds])
 
@@ -52,11 +52,11 @@ const player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
     return (
         <div className={cl.player}>
             <audio autoplay={'autoplay'} src={data.url} currentTime='20sec' ref={audioRef}/>
-            <button className="resetBtn" onClick={() => leaf(false)}>
+            {/* <button className="resetBtn" onClick={() => leaf()}>
                 <IconContext.Provider value={{ size: "3.5em", color: "#27AE60" }}>
                     <BiSkipPrevious />
                 </IconContext.Provider>
-            </button>
+            </button> */}
             <button className='resetBtn' onClick={play}>
                 <IconContext.Provider value={{ size: "1.8em", color: "#27AE60" }}>
                     {
@@ -66,7 +66,7 @@ const player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
                     }
                 </IconContext.Provider>
             </button>
-            <button className="resetBtn" onClick={() => leaf(true)}>
+            <button className="resetBtn" onClick={() => leaf()}>
                 <IconContext.Provider value={{ size: "3.5em", color: "#27AE60" }}>
                     <BiSkipNext />
                 </IconContext.Provider>

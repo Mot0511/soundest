@@ -7,7 +7,7 @@ export default interface PlayerType {
         title: string
         author: string
     }
-    leaf: (side: boolean, random: boolean) => void
+    leaf: () => void
     isPlaying: boolean
     setIsPlaying: any
 }

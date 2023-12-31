@@ -28,29 +28,26 @@ const page = () => {
         redirect('/login')
     }
 
-    const leaf = (side: boolean, random: boolean=false) => {
-        if (!random){
-            let newStep = 0
-            if (side){
-                if (step < items.length - 1){
-                    newStep = step + 1
-                }
-            } else{
-                if (step > 0){
-                    newStep = step - 1
-                }
-            }
-            const newSong = items[newStep]
-            setIsPlaying(true)
-            getUrl(newSong.id)
-            setStep(newStep)
-        } else {
-            const newStep = Math.floor(Math.random() * items.length)
-            const newSong = items[newStep]
-            setIsPlaying(true)
-            getUrl(newSong.id)
-            setStep(newStep)
-        }
+    const leaf = () => {
+        const newStep = Math.floor(Math.random() * items.length)
+        const newSong = items[newStep]
+        setIsPlaying(true)
+        getUrl(newSong.id)
+        setStep(newStep)
+        // let newStep = 0
+        // if (side){
+        //     if (step < items.length - 1){
+        //         newStep = step + 1
+        //     }
+        // } else{
+        //     if (step > 0){
+        //         newStep = step - 1
+        //     }
+        // }
+        // const newSong = items[newStep]
+        // setIsPlaying(true)
+        // getUrl(newSong.id)
+        // setStep(newStep)
     }
 
     const setSong = (id: number) => {
