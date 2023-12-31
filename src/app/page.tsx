@@ -79,7 +79,7 @@ const Page = () => {
                         : items.length 
                             ? <div className={cl.items}>
                                 {
-                                    items?.map(item => <Item item={item} onClick={setSong} />)
+                                    items?.map(item => <Item key={item.id} item={item} onClick={setSong} />)
                                 }
                             </div> 
                             : <h2>У вас нет музыки</h2>      
