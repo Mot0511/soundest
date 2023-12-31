@@ -14,7 +14,7 @@ import { PlaylistsSlice } from '../store/reducers/PlaylistsSlice';
 import {useCookies} from 'react-cookie'
 import { redirect } from 'next/navigation'
 
-const page = () => {
+const Page = () => {
     const [cookies, setCookie, removeCookie] = useCookies();
     
     const login = useCookies()[0].login
@@ -66,4 +66,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;

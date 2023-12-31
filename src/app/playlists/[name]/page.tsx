@@ -13,7 +13,7 @@ import Loading from '../../components/loading/loading'
 import {useCookies} from 'react-cookie'
 import { redirect } from 'next/navigation'
 
-const page = () => {
+const Page = () => {
     const login = useCookies()[0].login
     const [cookies, setCookie, removeCookie] = useCookies();
 
@@ -104,4 +104,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;

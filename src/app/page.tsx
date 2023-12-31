@@ -12,7 +12,7 @@ import {useCookies} from 'react-cookie'
 import { redirect } from 'next/navigation'
 import { MdTheaterComedy } from 'react-icons/md';
 
-const page = () => {
+const Page = () => {
 
     const login = useCookies()[0].login
 
@@ -95,4 +95,4 @@ const page = () => {
     );
 };``
 
-export default page
+export default Page

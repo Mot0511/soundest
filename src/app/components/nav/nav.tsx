@@ -13,7 +13,7 @@ import {useCookies} from 'react-cookie'
 import { useRouter } from 'next/navigation'
 import { getAuth, signOut } from 'firebase/auth';
 
-const nav = () => {
+const Nav = () => {
 
     const login = useCookies()[0].login
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -55,4 +55,4 @@ const nav = () => {
     );
 };
 
-export default nav;
+export default Nav;

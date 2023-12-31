@@ -18,7 +18,7 @@ import Loading from '../loading/loading';
 import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 import {useCookies} from 'react-cookie'
 
-const item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: number) => void, playlist: string}) => {
+const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: number) => void, playlist: string}) => {
     const login = useCookies()[0].login
 
     const [title, setTitle] = useState<string>(item.title)
@@ -119,4 +119,4 @@ const item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
     );
 };
 
-export default item;
+export default Item;

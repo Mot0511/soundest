@@ -7,7 +7,7 @@ import loginViaGoogle from '../services/loginViaGoogle';
 import {useCookies} from 'react-cookie'
 import { useRouter } from 'next/navigation'
 
-const page = () => {
+const Page = () => {
     const [cookies, setCookie, removeCookie] = useCookies();
     const router = useRouter()
     return (
@@ -21,4 +21,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;

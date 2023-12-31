@@ -13,7 +13,7 @@ import Myinput from '../UI/myinput/myinput';
 import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
 import {useCookies} from 'react-cookie'
 
-const playlist = ({name, data}: {name: string, data: number[]}) => {
+const Playlist = ({name, data}: {name: string, data: number[]}) => {
     
     const login = useCookies()[0].login
     const [isEditing, setIsEditing] = useState<boolean>(false)
@@ -60,4 +60,4 @@ const playlist = ({name, data}: {name: string, data: number[]}) => {
     );
 };
 
-export default playlist;
+export default Playlist;

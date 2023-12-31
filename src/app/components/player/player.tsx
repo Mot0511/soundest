@@ -8,7 +8,7 @@ import { FaPlay } from "react-icons/fa";
 import PlayerType from '@/app/types/PlayerType';
 import { FaPause } from "react-icons/fa";
 
-const player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
+const Player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
 
     const audioRef = useRef()
     const [seconds, setSeconds] = useState<number>(0);
@@ -91,4 +91,4 @@ const player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
     );
 };
 
-export default player;  
+export default Player;  
