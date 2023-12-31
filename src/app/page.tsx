@@ -1,55 +1,71 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import cl from './page.module.sass'
 import Item from './components/item/item'
-import ItemType from './types/ItemType';
 import Player from './components/player/player'
-import PlayerType from './types/PlayerType';
 import { getDownloadURL, ref } from 'firebase/storage';
-import { storage } from './services/getApp';
+import { storageRef } from './services/getApp';
+import Loading from './components/loading/loading'
+import { useTypedSelector } from './hooks/useTypedSelector';
+import {useCookies} from 'react-cookie'
+import { redirect } from 'next/navigation'
+import { MdTheaterComedy } from 'react-icons/md';
 
 const page = () => {
 
+    const login = useCookies()[0].login
+
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);  
     const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
+    const {items, isLoading, error} = useTypedSelector(states => states.items)
+    
+    const [cookies, setCookie, removeCookie] = useCookies();
 
-    const [items, setItems] = useState<ItemType[]>([
-        {
-            id: 0,
-            title: 'Six feet underground',
-            author: 'Lord Of The Lost'
-        },
-        {
-            id: 1,
-            title: 'Zeit zu gehen',
-            author: 'Unheilig'
-        },
-        
-    ])
-    useEffect(() => {
-        getUrl(items[0].id)
-        
-    }, [])
+    if (!cookies.login){
+        console.log('Home - no cookies');
+        redirect('/login')
+    }
 
-    const leaf = (side: boolean) => {
-        let newStep = 0
-        if (side){
-            if (step < items.length - 1){
-                newStep = step + 1
+    const leaf = (side: boolean, random: boolean=false) => {
+        if (!random){
+            let newStep = 0
+            if (side){
+                if (step < items.length - 1){
+                    newStep = step + 1
+                }
+            } else{
+                if (step > 0){
+                    newStep = step - 1
+                }
             }
-        } else{
-            if (step > 0){
-                newStep = step - 1
+            const newSong = items[newStep]
+            setIsPlaying(true)
+            getUrl(newSong.id)
+            setStep(newStep)
+        } else {
+            const newStep = Math.floor(Math.random() * items.length)
+            const newSong = items[newStep]
+            setIsPlaying(true)
+            getUrl(newSong.id)
+            setStep(newStep)
+        }
+    }
+
+    const setSong = (id: number) => {
+        for (let i in items){
+            if (items[i].id == id){
+                setStep(Number(i))
+                break
             }
         }
-        const newSong = items[newStep]
-        getUrl(newSong.id)
-        setStep(newStep)
+        setIsPlaying(true)
+        getUrl(id)
     }
 
     const getUrl = (id: number) => {
-        getDownloadURL(ref(storage, `/Mot0511/${id}.mp3`))
+        getDownloadURL(storageRef(`/${login}/${id}.mp3`))
             .then(url =>{ 
                 setUrl(url)
             })
@@ -58,13 +74,25 @@ const page = () => {
     return (
         <>
             <h1 className='heading'>Моя музыка</h1>
-            <div className={cl.items}>
-                {
-                    items?.map(item => <Item item={item} />)
-                }
-            </div>
+            {
+                isLoading
+                    ? <Loading />
+                    : error
+                        ? <h2>Произошла ошибка</h2>
+                        : items.length 
+                            ? <div className={cl.items}>
+                                {
+                                    items?.map(item => <Item item={item} onClick={setSong} />)
+                                }
+                            </div> 
+                            : <h2>У вас нет музыки</h2>      
+            }    
             <div className={cl.playerContainer}>
-                <Player data={{...items[step], url}} leaf={leaf} />
+                {
+                    url
+                        ? <Player data={{...items[step], url}} isPlaying={isPlaying} setIsPlaying={setIsPlaying} leaf={leaf} />
+                        : <></>
+                }
             </div>
         </>
     );

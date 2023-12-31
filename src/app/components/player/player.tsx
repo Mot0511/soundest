@@ -8,13 +8,13 @@ import { FaPlay } from "react-icons/fa";
 import PlayerType from '@/app/types/PlayerType';
 import { FaPause } from "react-icons/fa";
 
-const player = ({data, leaf}: PlayerType) => {
+const player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
 
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);  
     const audioRef = useRef()
     const [seconds, setSeconds] = useState<number>(0);
     const [duration, setDuration] = useState<number>(1);
     const progressBarRef = useRef()
+    const [isFirstPlaying, setIsFirstPlaying] = useState<boolean>(true)
 
     const play = () => {
         if (isPlaying) {
@@ -33,24 +33,25 @@ const player = ({data, leaf}: PlayerType) => {
     useEffect(() => {
         const interval = setInterval(() => {
             progressBarRef.current.value = audioRef.current.currentTime
+            setSeconds(audioRef.current.currentTime)
         })
-        if (data.title.length > 15){
-            
-        }
         return () => clearInterval(interval)
     }, [])
+    useEffect(() => {
+        if (seconds == duration){
+            console.log(1);
+            leaf(true, true)
+        }
+    }, [seconds])
 
     useEffect(() => {
         setDuration(audioRef.current.duration)
     }, [audioRef.current?.duration])
 
-    useEffect(() => {
-        setIsPlaying(true)
-    },[data.url])
 
     return (
         <div className={cl.player}>
-            <audio src={data.url} currentTime='20sec' ref={audioRef}/>
+            <audio autoplay={'autoplay'} src={data.url} currentTime='20sec' ref={audioRef}/>
             <button className="resetBtn" onClick={() => leaf(false)}>
                 <IconContext.Provider value={{ size: "3.5em", color: "#27AE60" }}>
                     <BiSkipPrevious />
@@ -71,10 +72,10 @@ const player = ({data, leaf}: PlayerType) => {
                 </IconContext.Provider>
             </button>
             <div className={cl.dataContainer}>
-                <p className={cl.title + ' ' + (data.title.length > 15 ? cl.animation : '')}>{data.title}</p>
+                <p className={cl.title + ' ' + (data.title?.length > 15 ? cl.animation : '')}>{data.title}</p>
             </div>
             <div className={cl.dataContainer}>
-            <p className={cl.author + ' ' + (data.title.length > 20 ? cl.animation : '')}>{data.author}</p>
+            <p className={cl.author + ' ' + (data.title?.length > 20 ? cl.animation : '')}>{data.author}</p>
           </div>
           <input 
             type="range" 
@@ -85,6 +86,7 @@ const player = ({data, leaf}: PlayerType) => {
             max={duration}
             ref={progressBarRef}
           />
+          <p>{Math.floor(seconds / 60)}:{Math.floor(seconds % 60)} / {duration ? Math.floor(duration / 60)+':'+Math.floor(duration % 60) : '0:0'}</p>
         </div>
     );
 };

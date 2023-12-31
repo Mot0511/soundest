@@ -1,4 +1,9 @@
+.itemContainer
+    display: flex
+    overflow-x: hidden
 .item
+    width: 100%
+    position: relative
     height: 50px
     border-radius: 5px
     border: 1px solid grey
@@ -12,5 +17,13 @@
     .title
         font-size: 20px
 
+.selectPlaylist
+    margin-left: 50px
+    margin-bottom: 10px
+
 .item:hover
     border-color: white
+
+.itemActive:active
+    transform: scale(0.95)
+
