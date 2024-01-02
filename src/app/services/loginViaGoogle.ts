@@ -8,8 +8,6 @@ export default (callback: (login: string) => void) => {
     auth.languageCode = 'ru';
 
     signInWithPopup(auth, provider).then(res => {
-        console.log(1);
-        
         const email = res.user.email
         const login = email ? email.split('@')[0] : ''
         const ref = dbRef(`users/${login}/`)
@@ -23,8 +21,6 @@ export default (callback: (login: string) => void) => {
             }
         })
     }).catch(e => {
-        console.log(2);
-
         console.log(e.code)
         console.log(e.message)
     })
