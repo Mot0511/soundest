@@ -20,5 +20,8 @@ export default (callback: (login: string) => void) => {
                 callback(login)
             }
         })
+    }).catch(e => {
+        console.log(e.code)
+        console.log(e.message)
     })
 }
