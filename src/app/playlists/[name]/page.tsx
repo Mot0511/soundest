@@ -10,12 +10,12 @@ import { getDownloadURL } from 'firebase/storage';
 import { storageRef } from '@/app/services/getApp';
 import Player from '../../components/player/player'
 import Loading from '../../components/loading/loading'
-import {useCookies} from 'react-cookie'
+import cookie from 'react-cookies'
 import { redirect } from 'next/navigation'
 
 const Page = () => {
-    const login = useCookies()[0].login
-    const [cookies, setCookie, removeCookie] = useCookies();
+    const login = cookie.load('login')
+    // const [cookies, setCookie, removeCookie] = useCookies();
 
     const name = decodeURIComponent(useParams<{name: string}>().name)
     const [isPlaying, setIsPlaying] = useState<boolean>(false);  
@@ -26,9 +26,11 @@ const Page = () => {
     const [items, setItems] = useState<ItemType[]>([])
     const {list} = useTypedSelector(states => states.playlists)
     const {items: Allitems, isLoading, error} = useTypedSelector(states => states.items)
-    if (!cookies.login){
-        redirect('/login')
-    }
+    useEffect(() => {
+        if (!login){
+            redirect('/login')
+        }
+    }, [login])
     useEffect(() => {
         if (!isLoading){
             const tmp: ItemType[] = []
@@ -60,17 +62,8 @@ const Page = () => {
                 setUrl(url)
             })
     }
-    const leaf = (side: boolean) => {
-        let newStep = 0
-        if (side){
-            if (step < items.length - 1){
-                newStep = step + 1
-            }
-        } else{
-            if (step > 0){
-                newStep = step - 1
-            }
-        }
+    const leaf = () => {
+        const newStep = Math.floor(Math.random() * items.length)
         const newSong = items[newStep]
         setIsPlaying(true)
         getUrl(newSong.id)

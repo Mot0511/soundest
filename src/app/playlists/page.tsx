@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import cl from './style.module.sass'
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import Loading from '../components/loading/loading'
@@ -11,21 +11,24 @@ import { IconContext } from 'react-icons';
 import { FaCheck } from 'react-icons/fa';
 import { useTypedDispatch } from '../hooks/useTypedDispatch';
 import { PlaylistsSlice } from '../store/reducers/PlaylistsSlice';
-import {useCookies} from 'react-cookie'
+import cookie from 'react-cookies'
+
 import { redirect } from 'next/navigation'
 
 const Page = () => {
-    const [cookies, setCookie, removeCookie] = useCookies();
+    // const [cookies, setCookie, removeCookie] = useCookies();
     
-    const login = useCookies()[0].login
+    const login = cookie.load('login')
     const {list, isLoading, error} = useTypedSelector(states => states.playlists)
     const dispatch = useTypedDispatch()
     const {addPlaylist} = PlaylistsSlice.actions
     const [isCreating, setIsCreating] = useState<boolean>(false)
     const [name, setName] = useState<string>('')
-    if (!cookies.login){
-        redirect('/login')
-    }
+    useEffect(() => {
+        if (!login){
+            redirect('/login')
+        }   
+    }, [login])
     const objMap = (obj: any) => {
         const array: React.ReactNode[] = []
         for (let i in obj){
@@ -44,7 +47,7 @@ const Page = () => {
             <Fillbutton onClick={() => setIsCreating(!isCreating)}>Создать плейлист</Fillbutton><br />
             {
                 isCreating && <div style={{display: 'flex', marginTop: '20px'}}>
-                <Myinput text='Название' value={name} onChange={e => setName(e.target.value)} />
+                <Myinput text='Название' value={name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
                 <Fillbutton onClick={createPlaylist} style={{width: '30px', height: '30px', marginLeft: '10px', padding: '0', display: 'flex', justifyContent: 'center', alignItems: 'center'}}><br />
                     <IconContext.Provider value={{size: '1.2em', color: '#fff'}}>
                         <FaCheck />

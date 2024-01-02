@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
 import cl from './player.module.sass'
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"; // иконки для следующего и предыдущего трека
 import { IconContext } from "react-icons"; // для кастомизации иконок
@@ -10,30 +10,35 @@ import { FaPause } from "react-icons/fa";
 
 const Player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
 
-    const audioRef = useRef()
-    const [seconds, setSeconds] = useState<number>(0);
-    const [duration, setDuration] = useState<number>(1);
-    const progressBarRef = useRef()
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const [seconds, setSeconds] = useState<number | undefined>(0);
+    const [duration, setDuration] = useState<number | undefined>(1);
+    const progressBarRef = useRef<HTMLInputElement>(null);
     const [isFirstPlaying, setIsFirstPlaying] = useState<boolean>(true)
 
     const play = () => {
         if (isPlaying) {
-          audioRef.current?.pause()
+          audioRef?.current?.pause()
           setIsPlaying(false);
         } else {
-          audioRef.current?.play()
+          audioRef?.current?.play()
           setIsPlaying(true);
         }
       };
     
     const rewind = () => {
-        audioRef.current.currentTime = progressBarRef.current.value;
-        setSeconds(progressBarRef.current?.value)
+        const value = Number(progressBarRef?.current?.value)
+        if (audioRef.current){
+            audioRef.current.currentTime = value;
+        }
+        setSeconds(value)
     }
     useEffect(() => {
         const interval = setInterval(() => {
-            progressBarRef.current.value = audioRef.current.currentTime
-            setSeconds(audioRef.current.currentTime)
+            if (progressBarRef.current){
+                progressBarRef.current.value = String(audioRef.current?.currentTime)
+            }
+            setSeconds(audioRef?.current?.currentTime)
         })
         return () => clearInterval(interval)
     }, [])
@@ -45,13 +50,12 @@ const Player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
     }, [seconds])
 
     useEffect(() => {
-        setDuration(audioRef.current.duration)
-    }, [audioRef.current?.duration])
-
+        setDuration(audioRef?.current?.duration)
+    }, [audioRef?.current?.duration])
 
     return (
         <div className={cl.player}>
-            <audio autoplay={'autoplay'} src={data.url} currentTime='20sec' ref={audioRef}/>
+            <audio autoPlay={true} src={data.url} ref={audioRef}/>
             {/* <button className="resetBtn" onClick={() => leaf()}>
                 <IconContext.Provider value={{ size: "3.5em", color: "#27AE60" }}>
                     <BiSkipPrevious />
@@ -86,7 +90,7 @@ const Player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
             max={duration}
             ref={progressBarRef}
           />
-          <p>{Math.floor(seconds / 60)}:{Math.floor(seconds % 60)} / {duration ? Math.floor(duration / 60)+':'+Math.floor(duration % 60) : '0:0'}</p>
+          <p>{Math.floor((seconds ? seconds : 0) / 60)}:{Math.floor((seconds ? seconds : 0) % 60)} / {duration ? Math.floor(duration / 60)+':'+Math.floor(duration % 60) : '0:0'}</p>
         </div>
     );
 };

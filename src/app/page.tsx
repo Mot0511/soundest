@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import cl from './page.module.sass'
 import Item from './components/item/item'
 import Player from './components/player/player'
@@ -8,25 +8,27 @@ import { getDownloadURL, ref } from 'firebase/storage';
 import { storageRef } from './services/getApp';
 import Loading from './components/loading/loading'
 import { useTypedSelector } from './hooks/useTypedSelector';
-import {useCookies} from 'react-cookie'
+import cookie from 'react-cookies'
 import { redirect } from 'next/navigation'
 import { MdTheaterComedy } from 'react-icons/md';
 
 const Page = () => {
 
-    const login = useCookies()[0].login
+    const login = cookie.load('login')
 
     const [isPlaying, setIsPlaying] = useState<boolean>(false);  
     const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
     const {items, isLoading, error} = useTypedSelector(states => states.items)
     
-    const [cookies, setCookie, removeCookie] = useCookies();
+    // const [cookies, setCookie, removeCookie] = useCookies();
 
-    if (!cookies.login){
-        console.log('Home - no cookies');
-        redirect('/login')
-    }
+    useEffect(() => {
+        if (!login){
+            redirect('/login')
+        }
+    }, [login])
+    
 
     const leaf = () => {
         const newStep = Math.floor(Math.random() * items.length)
@@ -79,7 +81,7 @@ const Page = () => {
                         : items.length 
                             ? <div className={cl.items}>
                                 {
-                                    items?.map(item => <Item key={item.id} item={item} onClick={setSong} />)
+                                    items?.map(item => <Item key={item.id} item={item} onClick={setSong} playlist={''} />)
                                 }
                             </div> 
                             : <h2>У вас нет музыки</h2>      

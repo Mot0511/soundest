@@ -9,7 +9,7 @@ export default (callback: (login: string) => void) => {
 
     signInWithPopup(auth, provider).then(res => {
         const email = res.user.email
-        const login = email.split('@')[0]
+        const login = email ? email.split('@')[0] : ''
         const ref = dbRef(`users/${login}/`)
         get(ref).then(snap => {
             if (!snap.val()){

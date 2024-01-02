@@ -16,10 +16,10 @@ import { GoPlus } from "react-icons/go";
 import { useTypedSelector } from '@/app/hooks/useTypedSelector';
 import Loading from '../loading/loading';
 import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
-import {useCookies} from 'react-cookie'
+import cookie from 'react-cookies'
 
 const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: number) => void, playlist: string}) => {
-    const login = useCookies()[0].login
+    const login = cookie.load('login')
 
     const [title, setTitle] = useState<string>(item.title)
     const [author, setAuthor] = useState<string>(item.author)

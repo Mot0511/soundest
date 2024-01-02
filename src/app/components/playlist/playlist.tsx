@@ -11,11 +11,12 @@ import { FaCheck } from 'react-icons/fa';
 import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 import Myinput from '../UI/myinput/myinput';
 import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
-import {useCookies} from 'react-cookie'
+import cookie from 'react-cookies'
+
 
 const Playlist = ({name, data}: {name: string, data: number[]}) => {
     
-    const login = useCookies()[0].login
+    const login = cookie.load('login')
     const [isEditing, setIsEditing] = useState<boolean>(false)
     const {removePlaylist, editPlaylist} = PlaylistsSlice.actions
     const [newName, setNewName] = useState<string>(name)
@@ -26,7 +27,7 @@ const Playlist = ({name, data}: {name: string, data: number[]}) => {
             <Link href={isEditing ? '' : `/playlists/${name}`}><div className={cl.playlist+' '+(!isEditing ? cl.itemActive : '')}>
                 {
                     isEditing
-                        ? <Myinput style={{width: '100%', marginLeft: '10px'}} text='Название' value={newName} onChange={e => setNewName(e.target.value)} />
+                        ? <Myinput style={{width: '100%', marginLeft: '10px'}} text='Название' value={newName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewName(e.target.value)} />
                         : <h2>{name}</h2>
                 }
             </div></Link><br />
