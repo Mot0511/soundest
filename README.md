@@ -7,6 +7,7 @@
 - Typescript
 - React (Next)
 - Redux
+- Firebase
   
 **Ссылка на сайт - https://soundest.vercel.app/**
 
