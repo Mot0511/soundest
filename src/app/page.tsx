@@ -11,12 +11,16 @@ import { useTypedSelector } from './hooks/useTypedSelector';
 import cookie from 'react-cookies'
 import { redirect } from 'next/navigation'
 import { MdTheaterComedy } from 'react-icons/md';
+import { getItems } from './services/fetchItems';
+import { getPlaylists } from './services/fetchPlaylists';
+import { useTypedDispatch } from './hooks/useTypedDispatch';
 
 const Page = () => {
 
     const login = cookie.load('login')
 
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);  
+    const dispatch = useTypedDispatch()
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
     const {items, isLoading, error} = useTypedSelector(states => states.items)
@@ -28,6 +32,11 @@ const Page = () => {
             redirect('/login')
         }
     }, [login])
+
+    useEffect(() => {
+        login && getItems(login, dispatch)
+        login && getPlaylists(login, dispatch)
+    }, [])
     
 
     const leaf = () => {
@@ -78,10 +87,10 @@ const Page = () => {
                     ? <Loading />
                     : error
                         ? <h2>Произошла ошибка</h2>
-                        : items.length 
+                        : items.length > 1
                             ? <div className={cl.items}>
                                 {
-                                    items?.map(item => <Item key={item.id} item={item} onClick={setSong} playlist={''} />)
+                                    [...items].reverse().map(item => <Item key={item.id} item={item} onClick={setSong} playlist={''} />)
                                 }
                             </div> 
                             : <h2>У вас нет музыки</h2>      

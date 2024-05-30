@@ -12,6 +12,9 @@ import Player from '../../components/player/player'
 import Loading from '../../components/loading/loading'
 import cookie from 'react-cookies'
 import { redirect } from 'next/navigation'
+import { getPlaylists } from '@/app/services/fetchPlaylists';
+import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
+import { getItems } from '@/app/services/fetchItems';
 
 const Page = () => {
     const login = cookie.load('login')
@@ -22,28 +25,34 @@ const Page = () => {
     const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
 
-    
+    const dispatch = useTypedDispatch()
     const [items, setItems] = useState<ItemType[]>([])
-    const {list} = useTypedSelector(states => states.playlists)
+    const {list, isLoading: isLoadingPlaylists} = useTypedSelector(states => states.playlists)
     const {items: Allitems, isLoading, error} = useTypedSelector(states => states.items)
+
     useEffect(() => {
         if (!login){
             redirect('/login')
         }
     }, [login])
+
+    useEffect(() => {
+        login && getPlaylists(login, dispatch)
+        login && getItems(login, dispatch)
+    }, [])
+
     useEffect(() => {
         if (!isLoading){
             const tmp: ItemType[] = []
             list[name].map((id: number) => {
-                if (id != 0) {
-                    const item = Allitems.filter((item: ItemType) => item.id == id)[0]
-                    console.log(Allitems)
-                    tmp.push(item)
-                }
+                if (id == 0) return
+                const item = Allitems.filter((item: ItemType) => item.id == id)[0]
+                tmp.push(item)
             })
+            console.log(tmp)
             setItems(tmp)
         }
-    }, [isLoading])
+    }, [isLoading]) 
     
 
     const setSong = (id: number) => {
@@ -84,7 +93,7 @@ const Page = () => {
                                 ? items.map(item => <Item key={item.id} item={item} onClick={setSong} playlist={name} />)                                
                                 : <h2>В плейлисте нет музыки</h2>
                             : <h2>У вас нет музыки</h2>
-            }    
+            }
             </div> 
             <div className={cl.playerContainer}>
                 {

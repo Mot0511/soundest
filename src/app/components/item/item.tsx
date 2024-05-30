@@ -47,7 +47,7 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
     }
     
     const remove = () => {
-        removeSong(dispatch, login, item.id)
+        removeSong(dispatch, login, item.id, list)
     }
     const removeFromPlaylist = () => {
         dispatch(removeItem([login, playlist, item.id]))

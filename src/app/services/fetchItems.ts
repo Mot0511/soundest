@@ -4,6 +4,7 @@ import { dbRef, storageRef } from "./getApp"
 import { ItemsActionType } from "../types/ItemsActionTypes"
 import { Dispatch } from "redux"
 import { deleteObject, uploadBytes } from "firebase/storage"
+import {PlaylistsSlice} from "../store/reducers/PlaylistsSlice"
 
 
 export const getItems = (login: string, dispatch: Dispatch<ItemsActionType>) => {
@@ -35,12 +36,26 @@ export const addItem = (login: string, files: any, dispatch: Dispatch<ItemsActio
     }
 }
 
-export const removeSong = (dispatch: Dispatch<{type: any, payload: [string, number] | boolean}>, login: string, id: number) => {
+export const removeSong = (dispatch: Dispatch<{type: any, payload: [string, number] | boolean}>, login: string, id: number, list) => {
     const {fetchItems, removeItem} = ItemsSlice.actions
+    const {removeItem: removeItemFromPlaylist} = PlaylistsSlice.actions
 
     dispatch(fetchItems(true))
     dispatch(removeItem([login, id]))
     deleteObject(storageRef(`${login}/${id}.mp3`))
+
+    let playlists = []
+
+    for (let i in list){
+        if (list[i].includes(id)){
+            playlists.push(i)
+        }
+    }
+    console.log(playlists)
+    playlists.forEach((playlist: string) => {
+        dispatch(removeItemFromPlaylist([login, playlist, id]))
+    })
+    
     dispatch(fetchItems(false))
 
 }

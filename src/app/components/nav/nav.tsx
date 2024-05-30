@@ -26,11 +26,6 @@ const Nav = () => {
         login && addItem(login, files, dispatch)
     }
 
-    useEffect(() => {
-        login && getItems(login, dispatch)
-        login && getPlaylists(login, dispatch)
-    }, [])
-
     const logout = () => {
         signOut(auth).then(() => {
             cookie.remove('login')

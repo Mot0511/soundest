@@ -14,6 +14,7 @@ import { PlaylistsSlice } from '../store/reducers/PlaylistsSlice';
 import cookie from 'react-cookies'
 
 import { redirect } from 'next/navigation'
+import { getPlaylists } from '../services/fetchPlaylists';
 
 const Page = () => {
     // const [cookies, setCookie, removeCookie] = useCookies();
@@ -24,11 +25,17 @@ const Page = () => {
     const {addPlaylist} = PlaylistsSlice.actions
     const [isCreating, setIsCreating] = useState<boolean>(false)
     const [name, setName] = useState<string>('')
+
     useEffect(() => {
         if (!login){
             redirect('/login')
         }   
     }, [login])
+
+    useEffect(() => {
+        login && getPlaylists(login, dispatch)
+    }, [])
+
     const objMap = (obj: any) => {
         const array: React.ReactNode[] = []
         for (let i in obj){

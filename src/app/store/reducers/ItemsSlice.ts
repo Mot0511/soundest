@@ -37,7 +37,6 @@ export const ItemsSlice = createSlice({
         removeItem(state, action: PayloadAction<[string, number]>){
             const login = action.payload[0]
             const id = action.payload[1]
-            console.log(id)
             state.items = state.items.filter(item => item.id != id)
             set(dbRef(`users/${login}/songs`), state.items).then(() => {
                 console.log('Song has removed')

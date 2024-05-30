@@ -34,15 +34,11 @@ export const PlaylistsSlice = createSlice({
                 console.log('Item added')
         })},
         removeItem(state, action: PayloadAction<[string, string, number]>){
+            state.isLoading = true
             const login = action.payload[0]
             const name = action.payload[1]
             const id = action.payload[2]
-            for (let i in state.list){
-                if (i == name){
-                    state.list[i] = state.list[i].filter((el: number) => el != id)
-                    break
-                }
-            }
+            state.list[name] = state.list[name].filter((el: number) => el != id)
             state.isLoading = false
             set(dbRef(`users/${login}/playlists`), state.list).then(() => {
                 console.log('Song has removed from playlist')
