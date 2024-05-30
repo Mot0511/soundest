@@ -14,7 +14,7 @@ const layout = ({children}: {children: React.ReactNode}) => {
     <Provider store={setupStore()}>
       <html>
         <head>
-
+          <title>Soundest</title>
         </head>
         <body>
           <Nav />
