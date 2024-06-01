@@ -36,7 +36,7 @@ export const addItem = (login: string, files: any, dispatch: Dispatch<ItemsActio
     }
 }
 
-export const removeSong = (dispatch: Dispatch<{type: any, payload: [string, number] | boolean}>, login: string, id: number, list) => {
+export const removeSong = (dispatch: Dispatch<{type: any, payload: [string, number] | boolean}>, login: string, id: number, list: any) => {
     const {fetchItems, removeItem} = ItemsSlice.actions
     const {removeItem: removeItemFromPlaylist} = PlaylistsSlice.actions
 
