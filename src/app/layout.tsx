@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { setupStore } from './store';
 import { useTypedDispatch } from './hooks/useTypedDispatch';
 import { getItems } from './services/fetchItems';
+import icon from './img/favicon.png'
 
 const layout = ({children}: {children: React.ReactNode}) => {
 
@@ -15,6 +16,7 @@ const layout = ({children}: {children: React.ReactNode}) => {
       <html>
         <head>
           <title>Soundest</title>
+          <link rel='icon' href='/src/app/img/favicon.png' />
         </head>
         <body>
           <Nav />
