@@ -4,7 +4,7 @@ import { dbRef, storageRef } from "./getApp"
 import { ItemsActionType } from "../types/ItemsActionTypes"
 import { Dispatch } from "redux"
 import { deleteObject, uploadBytes } from "firebase/storage"
-import {PlaylistsSlice} from "../store/reducers/PlaylistsSlice"
+import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 
 
 export const getItems = (login: string, dispatch: Dispatch<ItemsActionType>) => {
@@ -53,6 +53,7 @@ export const removeSong = (dispatch: Dispatch<{type: any, payload: [string, numb
     }
     console.log(playlists)
     playlists.forEach((playlist: string) => {
+        // @ts-ignore
         dispatch(removeItemFromPlaylist([login, playlist, id]))
     })
     
