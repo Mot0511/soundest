@@ -14,7 +14,7 @@ const Page = () => {
         <div className={cl.loginContainer}>
             <h1 className='heading'>Вход</h1>
             <Fillbutton onClick={() => loginViaGoogle((login) => {
-                cookie.save('login', login, {path: '/'})
+                cookie.save('login', login, {path: '/', maxAge: 31536000})
                 router.push('/')
             })}>Войти через Google</Fillbutton>
         </div>
