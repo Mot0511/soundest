@@ -14,6 +14,7 @@ import { MdTheaterComedy } from 'react-icons/md';
 import { getItems } from './services/fetchItems';
 import { getPlaylists } from './services/fetchPlaylists';
 import { useTypedDispatch } from './hooks/useTypedDispatch';
+import Head from 'next/head';
 
 const Page = () => {
 
