@@ -5,10 +5,6 @@ import './globals.css'
 import Nav from './components/nav/nav'
 import { Provider } from 'react-redux';
 import { setupStore } from './store';
-import { useTypedDispatch } from './hooks/useTypedDispatch';
-import { getItems } from './services/fetchItems';
-import icon from './img/favicon.png'
-import Head from 'next/head';
 
 const layout = ({children}: {children: React.ReactNode}) => {
 

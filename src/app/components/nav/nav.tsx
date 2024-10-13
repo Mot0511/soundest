@@ -41,7 +41,7 @@ const Nav = () => {
             </ul>
             <div>
                 <input multiple onChange={login && uploadSong} type="file" id='file' hidden accept='.mp3' />
-                <Fillbutton style={{marginBottom: '10px', width: '100%', height: '40px'}} fullwidth={'true'}><label htmlFor='file'>Загрузить музыку</label></Fillbutton>
+                <Fillbutton style={{marginBottom: '10px', width: '100%'}} fullwidth={'true'}><label htmlFor='file'>Загрузить музыку</label></Fillbutton>
                 <Fillbutton onClick={logout} style={{marginBottom: '50px', width: '100%', height: '40px'}} fullwidth={'true'}>Выйти</Fillbutton>
             </div>
         </div>
