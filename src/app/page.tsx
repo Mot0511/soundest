@@ -46,20 +46,6 @@ const Page = () => {
         setIsPlaying(true)
         getUrl(newSong.id)
         setStep(newStep)
-        // let newStep = 0
-        // if (side){
-        //     if (step < items.length - 1){
-        //         newStep = step + 1
-        //     }
-        // } else{
-        //     if (step > 0){
-        //         newStep = step - 1
-        //     }
-        // }
-        // const newSong = items[newStep]
-        // setIsPlaying(true)
-        // getUrl(newSong.id)
-        // setStep(newStep)
     }
 
     const setSong = (id: number) => {
