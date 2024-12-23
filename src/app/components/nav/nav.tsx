@@ -29,7 +29,7 @@ const Nav = () => {
     const logout = () => {
         signOut(auth).then(() => {
             cookie.remove('login')
-            router.push('/login')
+            router.push('/')
         })
     }
     return (

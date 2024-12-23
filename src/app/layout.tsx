@@ -15,10 +15,7 @@ const layout = ({children}: {children: React.ReactNode}) => {
           <title>Soundest</title>
         </head>
         <body>
-          <Nav />
-          <div className='page'>
             {children}
-          </div>
         </body>
       </html>
     </Provider>

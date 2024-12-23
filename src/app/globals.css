@@ -12,11 +12,10 @@
     padding: 30px;
     position: relative;
 }
-.heading{
-    margin-bottom: 30px;
-}
 body{
     background-color:  black;
+}
+.service{
     height: 100vh;
     display: flex;
     overflow: hidden

@@ -2,19 +2,19 @@
 
 import React, { useEffect, useState } from 'react';
 import cl from './style.module.sass'
-import { useTypedSelector } from '../hooks/useTypedSelector';
-import Loading from '../components/loading/loading'
-import Playlist from '../components/playlist/playlist'
-import Fillbutton from '../components/UI/fillbutton';
-import Myinput from '../components/UI/myinput/myinput';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import Loading from '../../components/loading/loading'
+import Playlist from '../../components/playlist/playlist'
+import Fillbutton from '../../components/UI/fillbutton';
+import Myinput from '../../components/UI/myinput/myinput';
 import { IconContext } from 'react-icons';
 import { FaCheck } from 'react-icons/fa';
-import { useTypedDispatch } from '../hooks/useTypedDispatch';
-import { PlaylistsSlice } from '../store/reducers/PlaylistsSlice';
+import { useTypedDispatch } from '../../hooks/useTypedDispatch';
+import { PlaylistsSlice } from '../../store/reducers/PlaylistsSlice';
 import cookie from 'react-cookies'
 
 import { redirect } from 'next/navigation'
-import { getPlaylists } from '../services/fetchPlaylists';
+import { getPlaylists } from '../../services/fetchPlaylists';
 
 const Page = () => {
     // const [cookies, setCookie, removeCookie] = useCookies();
@@ -28,7 +28,7 @@ const Page = () => {
 
     useEffect(() => {
         if (!login){
-            redirect('/login')
+            redirect('/')
         }   
     }, [login])
 
