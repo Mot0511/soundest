@@ -5,11 +5,11 @@ import cl from '../../page.module.sass'
 import { useParams } from 'next/navigation'
 import ItemType from '@/app/types/ItemType';
 import { useTypedSelector } from '@/app/hooks/useTypedSelector';
-import Item from '../../components/item/item'
+import Item from '../../../components/item/item'
 import { getDownloadURL } from 'firebase/storage';
 import { storageRef } from '@/app/services/getApp';
-import Player from '../../components/player/player'
-import Loading from '../../components/loading/loading'
+import Player from '../../../components/player/player'
+import Loading from '../../../components/loading/loading'
 import cookie from 'react-cookies'
 import { redirect } from 'next/navigation'
 import { getPlaylists } from '@/app/services/fetchPlaylists';
