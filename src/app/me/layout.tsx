@@ -9,14 +9,14 @@ import { setupStore } from '../store';
 const layout = ({children}: {children: React.ReactNode}) => {
 
   return (
-    <>
+    <Provider store={setupStore()}>
       <div className="service">
         <Nav />
         <div className='page'>
           {children}
         </div>
       </div>
-    </>
+    </Provider>
   );
 };
 

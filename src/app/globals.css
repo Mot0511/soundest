@@ -29,3 +29,8 @@ a:hover{
     padding: 0;
     cursor: pointer
 }
+@media screen and (max-width: 1022px){
+    .heading{
+        font-size: 40px;
+    }
+}
