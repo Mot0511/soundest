@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useEffect } from 'react';
 import './globals.css'
 import Nav from './components/nav/nav'
@@ -23,7 +21,7 @@ export const metadata: Metadata = {
 const layout = ({children}: {children: React.ReactNode}) => {
 
   return (
-    <Provider store={setupStore()}>
+    
       <html>
         <head>
           <title>Soundest</title>
@@ -32,7 +30,6 @@ const layout = ({children}: {children: React.ReactNode}) => {
             {children}
         </body>
       </html>
-    </Provider>
   );
 };
 
