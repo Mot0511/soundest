@@ -24,7 +24,7 @@ const Playlist = ({name, data}: {name: string, data: number[]}) => {
 
     return (
         <div>
-            <Link href={isEditing ? '' : `/playlists/${name}`}><div className={cl.playlist+' '+(!isEditing ? cl.itemActive : '')}>
+            <Link href={isEditing ? '' : `/me/playlists/${name}`}><div className={cl.playlist+' '+(!isEditing ? cl.itemActive : '')}>
                 {
                     isEditing
                         ? <Myinput style={{width: '100%', marginLeft: '10px'}} text='Название' value={newName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewName(e.target.value)} />

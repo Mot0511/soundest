@@ -51,7 +51,7 @@ const Page = () => {
     return (
         <div>
             <h1 className="heading">Плейлисты</h1>
-            <Fillbutton onClick={() => setIsCreating(!isCreating)}>Создать плейлист</Fillbutton><br />
+            <Fillbutton style={{marginTop: '20px'}} onClick={() => setIsCreating(!isCreating)}>Создать плейлист</Fillbutton><br />
             {
                 isCreating && <div style={{display: 'flex', marginTop: '20px'}}>
                 <Myinput text='Название' value={name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
