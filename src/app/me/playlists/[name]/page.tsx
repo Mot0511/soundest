@@ -42,16 +42,8 @@ const Page = () => {
     }, [])
 
     useEffect(() => {
-        if (!isLoading){
-            const tmp: ItemType[] = []
-            list[name].map((id: number) => {
-                if (id == 0) return
-                const item = Allitems.filter((item: ItemType) => item.id == id)[0]
-                tmp.push(item)
-            })
-            console.log(tmp)
-            setItems(tmp)
-        }
+        if (isLoading) return 
+        setItems(Allitems.filter((item: ItemType) => item != undefined && list[name].includes(item.id)))
     }, [isLoading]) 
     
 
@@ -94,7 +86,7 @@ const Page = () => {
                                 : <h2>В плейлисте нет музыки</h2>
                             : <h2>У вас нет музыки</h2>
             }
-            </div> 
+            </div>
             <div className={cl.playerContainer}>
                 {
                     url

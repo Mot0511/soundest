@@ -35,7 +35,9 @@ const Page = () => {
     }, [login])
 
     useEffect(() => {
-        login && getItems(login, dispatch)
+        console.log(items)
+        login && items.length == 0 && getItems(login, dispatch)
+        console.log(items)
         login && getPlaylists(login, dispatch)
     }, [])
     
