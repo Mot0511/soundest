@@ -14,7 +14,6 @@ const Player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
     const [seconds, setSeconds] = useState<number | undefined>(0);
     const [duration, setDuration] = useState<number | undefined>(1);
     const progressBarRef = useRef<HTMLInputElement>(null);
-    const [isFirstPlaying, setIsFirstPlaying] = useState<boolean>(true)
 
     const play = () => {
         if (isPlaying) {
@@ -79,8 +78,8 @@ const Player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
                 <p className={cl.title + ' ' + (data.title?.length > 15 ? cl.animation : '')}>{data.title}</p>
             </div>
             <div className={cl.dataContainer}>
-            <p className={cl.author + ' ' + (data.title?.length > 20 ? cl.animation : '')}>{data.author}</p>
-          </div>
+                <p className={cl.author + ' ' + (data.title?.length > 15 ? cl.animation : '')}>{data.author}</p>
+            </div>
           <input 
             type="range" 
             className={cl.progress}

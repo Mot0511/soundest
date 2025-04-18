@@ -1,7 +1,7 @@
 .items
     overflow-y: scroll
     overflow-x: hidden
-    height: 85%
+    height: 83vh
     padding-right: 10px
     margin-top: 20px
 
@@ -14,6 +14,11 @@
     background-color: #252B2C
 
 .playerContainer
-    width: 98%
-    position: absolute
-    bottom: 20px
+    width: calc(100% - 20px)
+    margin-top: 20px
+    // position: absolute
+    // bottom: 10px
+
+@media screen and (max-width: 840px)
+    .items
+        height: 65%

@@ -7,7 +7,7 @@ import ItemType from '@/app/types/ItemType';
 import { useTypedSelector } from '@/app/hooks/useTypedSelector';
 import Item from '../../../components/item/item'
 import { getDownloadURL } from 'firebase/storage';
-import { storageRef } from '@/app/services/getApp';
+import { auth, storageRef } from '@/app/services/getApp';
 import Player from '../../../components/player/player'
 import Loading from '../../../components/loading/loading'
 import cookie from 'react-cookies'
@@ -17,8 +17,7 @@ import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
 import { getItems } from '@/app/services/fetchItems';
 
 const Page = () => {
-    const login = cookie.load('login')
-    // const [cookies, setCookie, removeCookie] = useCookies();
+    const user = auth.currentUser
 
     const name = decodeURIComponent(useParams<{name: string}>().name)
     const [isPlaying, setIsPlaying] = useState<boolean>(false);  
@@ -31,14 +30,14 @@ const Page = () => {
     const {items: Allitems, isLoading, error} = useTypedSelector(states => states.items)
 
     useEffect(() => {
-        if (!login){
+        if (!user){
             redirect('/login')
         }
-    }, [login])
+    }, [user])
 
     useEffect(() => {
-        login && getPlaylists(login, dispatch)
-        login && getItems(login, dispatch)
+        user && getPlaylists(dispatch)
+        user && getItems(dispatch)
     }, [])
 
     useEffect(() => {
@@ -58,7 +57,7 @@ const Page = () => {
         getUrl(id)
     }
     const getUrl = (id: number) => {
-        getDownloadURL(storageRef(`/${login}/${id}.mp3`))
+        getDownloadURL(storageRef(`/${user?.uid}/${id}.mp3`))
             .then(url =>{ 
                 setUrl(url)
             })

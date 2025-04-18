@@ -4,16 +4,17 @@ import Header from "./components/header/header"
 import cookie from 'react-cookies'
 import { redirect } from 'next/navigation'
 import cl from './style.module.sass'
+import { auth } from "./services/getApp"
 
 const Main = () => {
 
-    const login = cookie.load('login')
-
+    const user = auth.currentUser
     useEffect(() => {
-        if (login){
-            redirect('/me/')
+        console.log(user)
+        if (user){
+            redirect('/me')
         }
-    }, [login])
+    }, [user])
 
     return (
         <>
