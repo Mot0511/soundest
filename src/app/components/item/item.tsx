@@ -17,9 +17,9 @@ import { useTypedSelector } from '@/app/hooks/useTypedSelector';
 import Loading from '../loading/loading';
 import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 import cookie from 'react-cookies'
+import { auth } from '@/app/services/getApp';
 
 const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: number) => void, playlist: string}) => {
-    const login = cookie.load('login')
 
     const [title, setTitle] = useState<string>(item.title)
     const [author, setAuthor] = useState<string>(item.author)
@@ -38,7 +38,7 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
             array.push(
             <div className={cl.item+' '+cl.itemActive} onClick={() => {
                 setIsAdding(!isAdding)
-                dispatch(addItem([login, i, item.id]))
+                dispatch(addItem([i, item.id]))
             }}>
                 <p className={cl.title}>{i}</p>
             </div>)
@@ -47,10 +47,10 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
     }
     
     const remove = () => {
-        removeSong(dispatch, login, item.id, list)
+        removeSong(dispatch, item.id, list)
     }
     const removeFromPlaylist = () => {
-        dispatch(removeItem([login, playlist, item.id]))
+        dispatch(removeItem([playlist, item.id]))
     }
 
     return (
@@ -60,7 +60,7 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
             {
                 isEditing
                     ? <>
-                        <Myinput text='Название' value={title} onChange={(e: any) => setTitle(e.target.value)} style={{marginRight: '10px'}} />
+                        <Myinput text='Название' value={title} onChange={(e: any) => setTitle(e.target.value)} style={{marginRight: '10px', marginBottom: window.screen.width < 840 ? '10px' : '0'}} />
                         <Myinput text='Автор' value={author} onChange={(e: any) => setAuthor(e.target.value)} />
                     </>
                     : <>
@@ -82,7 +82,7 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
             {
                 isEditing
                     ? <Fillbutton onClick={() => {
-                        dispatch(editItem([login, item.id, {title: title, author: author}]))
+                        dispatch(editItem([item.id, {title: title, author: author}]))
                         setIsEditing(false)
 
                     }} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>

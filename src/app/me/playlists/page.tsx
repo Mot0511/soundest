@@ -15,11 +15,12 @@ import cookie from 'react-cookies'
 
 import { redirect } from 'next/navigation'
 import { getPlaylists } from '../../services/fetchPlaylists';
+import { auth } from '@/app/services/getApp';
 
 const Page = () => {
     // const [cookies, setCookie, removeCookie] = useCookies();
     
-    const login = cookie.load('login')
+    const user = auth.currentUser
     const {list, isLoading, error} = useTypedSelector(states => states.playlists)
     const dispatch = useTypedDispatch()
     const {addPlaylist} = PlaylistsSlice.actions
@@ -27,13 +28,13 @@ const Page = () => {
     const [name, setName] = useState<string>('')
 
     useEffect(() => {
-        if (!login){
+        if (!user){
             redirect('/')
         }   
-    }, [login])
+    }, [user])
 
     useEffect(() => {
-        login && getPlaylists(login, dispatch)
+        user && getPlaylists(dispatch)
     }, [])
 
     const objMap = (obj: any) => {
@@ -45,7 +46,7 @@ const Page = () => {
     }
 
     const createPlaylist = () => {
-        dispatch(addPlaylist([login, name]))
+        user && dispatch(addPlaylist(name))
     }
 
     return (

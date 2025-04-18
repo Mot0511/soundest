@@ -16,8 +16,7 @@ const Header = () => {
             </ul>
             <div>
                 <a href="https://www.rustore.ru/catalog/app/com.ms.sndst" target='_blank' className={cl.download}>скачать приложение для Android</a>
-                <Fillbutton onClick={() => loginViaGoogle((login) => {
-                    cookie.save('login', login, {path: '/', maxAge: 31536000})
+                <Fillbutton onClick={() => loginViaGoogle(() => {
                     router.push('/me')
                 })}>Войти</Fillbutton>
             </div>

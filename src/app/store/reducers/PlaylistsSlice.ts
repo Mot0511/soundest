@@ -1,4 +1,4 @@
-import { dbRef } from "@/app/services/getApp";
+import { auth, dbRef } from "@/app/services/getApp";
 import { PlaylistsState } from "@/app/types/PlaylistsState";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { set } from "firebase/database";
@@ -24,49 +24,49 @@ export const PlaylistsSlice = createSlice({
             state.isLoading = false
             state.error = action.payload
         },
-        addItem(state, action: PayloadAction<[string, string, number]>){
-            const login = action.payload[0]
-            const name = action.payload[1]
-            const item = action.payload[2]
+        addItem(state, action: PayloadAction<[string, number]>){
+            const name = action.payload[0]
+            const item = action.payload[1]
             state.list[name] = [...state.list[name], item]
             state.isLoading = false
-            set(dbRef(`users/${login}/playlists`), state.list).then(() => {
+            const uid = auth.currentUser?.uid
+            set(dbRef(`users/${uid}/playlists`), state.list).then(() => {
                 console.log('Item added')
         })},
-        removeItem(state, action: PayloadAction<[string, string, number]>){
+        removeItem(state, action: PayloadAction<[string, number]>){
             state.isLoading = true
-            const login = action.payload[0]
-            const name = action.payload[1]
-            const id = action.payload[2]
+            const name = action.payload[0]
+            const id = action.payload[1]
             state.list[name] = state.list[name].filter((el: number) => el != id)
             state.isLoading = false
-            set(dbRef(`users/${login}/playlists`), state.list).then(() => {
+            const uid = auth.currentUser?.uid
+            set(dbRef(`users/${uid}/playlists`), state.list).then(() => {
                 console.log('Song has removed from playlist')
         })},
-        addPlaylist(state, action: PayloadAction<[string, string]>){
-            const login = action.payload[0]
-            const name = action.payload[1]
+        addPlaylist(state, action: PayloadAction<string>){
+            const name = action.payload
             state.list[name] = [0]
             state.isLoading = false
-            set(dbRef(`users/${login}/playlists`), state.list).then(() => {
+            const uid = auth.currentUser?.uid
+            set(dbRef(`users/${uid}/playlists`), state.list).then(() => {
                 console.log('Playlist created')
         })},
-        editPlaylist(state, action: PayloadAction<[string, string, string]>){
-            const login = action.payload[0]
-            const name = action.payload[1]
-            const newName = action.payload[2]
+        editPlaylist(state, action: PayloadAction<[string, string]>){
+            const name = action.payload[0]
+            const newName = action.payload[1]
             const playlist = state.list[name]
             delete state.list[name]
             state.list[newName] = playlist
-            set(dbRef(`users/${login}/playlists`), state.list).then(() => {
+            const uid = auth.currentUser?.uid
+            set(dbRef(`users/${uid}/playlists`), state.list).then(() => {
                 console.log('Playlist edited')
         })},
-        removePlaylist(state, action: PayloadAction<[string, string]>){
-            const login = action.payload[0]
-            const name = action.payload[1]
+        removePlaylist(state, action: PayloadAction<string>){
+            const name = action.payload
             delete state.list[name]
             state.isLoading = false
-            set(dbRef(`users/${login}/playlists`), state.list).then(() => {
+            const uid = auth.currentUser?.uid
+            set(dbRef(`users/${uid}/playlists`), state.list).then(() => {
                 console.log('Playlist removed')
         })}
 }})

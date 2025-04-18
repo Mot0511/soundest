@@ -12,11 +12,11 @@ import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 import Myinput from '../UI/myinput/myinput';
 import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
 import cookie from 'react-cookies'
+import { auth } from '@/app/services/getApp';
 
 
 const Playlist = ({name, data}: {name: string, data: number[]}) => {
     
-    const login = cookie.load('login')
     const [isEditing, setIsEditing] = useState<boolean>(false)
     const {removePlaylist, editPlaylist} = PlaylistsSlice.actions
     const [newName, setNewName] = useState<string>(name)
@@ -40,7 +40,7 @@ const Playlist = ({name, data}: {name: string, data: number[]}) => {
                 {
                     isEditing
                         ? <Fillbutton onClick={() => {
-                            dispatch(editPlaylist([login, name, newName]))
+                            dispatch(editPlaylist([name, newName]))
                             name = newName
                             setIsEditing(false)
                             }} style={{width: '60px', height: '50px', paddingTop: '5px', paddingLeft: '10px', marginBottom: '20px'}}>
@@ -48,7 +48,7 @@ const Playlist = ({name, data}: {name: string, data: number[]}) => {
                                 <FaCheck />
                             </IconContext.Provider>
                         </Fillbutton>
-                        : <Fillbutton onClick={() => dispatch(removePlaylist([login, newName]))} style={{width: '60px', height: '50px', paddingTop: '5px', paddingLeft: '10px', marginBottom: '20px'}}>
+                        : <Fillbutton onClick={() => dispatch(removePlaylist(newName))} style={{width: '60px', height: '50px', paddingTop: '5px', paddingLeft: '10px', marginBottom: '20px'}}>
                             <IconContext.Provider value={{size: '2em', color: '#fff'}}>
                                 <RxCross2 />
                             </IconContext.Provider>

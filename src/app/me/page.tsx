@@ -4,8 +4,9 @@ import React, { useEffect, useState } from 'react';
 import cl from './page.module.sass';
 import Item from '../components/item/item'
 import Player from '../components/player/player'
+import MobilePlayer from '../components/mobilePlayer/mobilePlayer'
 import { getDownloadURL, ref } from 'firebase/storage';
-import { storageRef } from '../services/getApp';
+import { auth, storageRef } from '../services/getApp';
 import Loading from '../components/loading/loading'
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import cookie from 'react-cookies'
@@ -18,7 +19,7 @@ import Head from 'next/head';
 
 const Page = () => {
 
-    const login = cookie.load('login')
+    const user = auth.currentUser
 
     const dispatch = useTypedDispatch()
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -29,16 +30,17 @@ const Page = () => {
     // const [cookies, setCookie, removeCookie] = useCookies();
 
     useEffect(() => {
-        if (!login){
+        console.log(user)
+        if (!user){
             redirect('/')
         }
-    }, [login])
+    }, [user])
 
     useEffect(() => {
         console.log(items)
-        login && items.length == 0 && getItems(login, dispatch)
+        user && items.length == 0 && getItems(dispatch)
         console.log(items)
-        login && getPlaylists(login, dispatch)
+        user && getPlaylists(dispatch)
     }, [])
     
 
@@ -62,7 +64,7 @@ const Page = () => {
     }
 
     const getUrl = (id: number) => {
-        getDownloadURL(storageRef(`/${login}/${id}.mp3`))
+        getDownloadURL(storageRef(`/${user?.uid}/${id}.mp3`))
             .then(url =>{ 
                 setUrl(url)
             })
@@ -87,7 +89,9 @@ const Page = () => {
             <div className={cl.playerContainer}>
                 {
                     url
-                        ? <Player data={{...items[step], url}} isPlaying={isPlaying} setIsPlaying={setIsPlaying} leaf={leaf} />
+                        ? window.screen.width >= 840
+                            ? <Player data={{...items[step], url}} isPlaying={isPlaying} setIsPlaying={setIsPlaying} leaf={leaf} />
+                            : <MobilePlayer data={{...items[step], url}} isPlaying={isPlaying} setIsPlaying={setIsPlaying} leaf={leaf} /> 
                         : <></>
                 }
             </div>

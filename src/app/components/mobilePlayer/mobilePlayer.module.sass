@@ -1,0 +1,53 @@
+@keyframes moving
+    from
+        transform: translateX(0%)
+    50%
+        transform: translateX(-80%)
+
+.animation
+    animation-name: moving
+    animation-iteration-count: infinite
+    animation-duration: 8s
+    animation-timing-function: linear
+
+.player
+    height: 60px
+    border-radius: 5px
+    background-color: #252B2C
+    padding-left: 10px
+    padding-right: 10px
+    padding-bottom: 10px
+    p
+        white-space: nowrap
+    
+    .title
+        font-size: 1.2vw
+
+    .author
+        font-size: 0.8vw
+
+    .progress
+        width: 100%
+        margin-right: 20px
+
+    .data
+        display: flex
+        width: 100%
+
+        .dataContainer
+            height: 50px
+            max-height: 20px
+            display: flex
+            align-items: center
+            overflow: hidden
+            margin-left: 10px
+            margin-right: 10px
+
+@media screen and (max-width: 840px)
+    .player
+        .title
+            font-size: 4vw
+        .author
+            font-size: 3vw
+        .data
+            display: block

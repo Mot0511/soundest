@@ -29,6 +29,20 @@ a:hover{
     padding: 0;
     cursor: pointer
 }
+.flex{
+    display: flex;
+    align-items: center;
+}
+@media screen and (max-width: 840px){
+    .page{
+        width: 100vw;
+        height: 100vh;
+        padding: 10px;
+    }
+    .service{
+        display: block;
+    }
+}
 @media screen and (max-width: 1022px){
     .heading{
         font-size: 40px;
