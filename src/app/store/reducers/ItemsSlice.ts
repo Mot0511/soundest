@@ -10,7 +10,7 @@ const initialState: ItemsState = {
     error: false,
 }
 
-export const ItemsSlice = createSlice({
+export const ItemsSlice = createSlice({ 
     name: 'items',
     initialState,
     reducers: {

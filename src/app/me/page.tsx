@@ -27,19 +27,14 @@ const Page = () => {
     const [step, setStep] = useState<number>(0)
     const {items, isLoading, error} = useTypedSelector(states => states.items)
     
-    // const [cookies, setCookie, removeCookie] = useCookies();
-
     useEffect(() => {
-        console.log(user)
         if (!user){
             redirect('/')
         }
     }, [user])
 
     useEffect(() => {
-        console.log(items)
         user && items.length == 0 && getItems(dispatch)
-        console.log(items)
         user && getPlaylists(dispatch)
     }, [])
     
@@ -78,7 +73,7 @@ const Page = () => {
                     ? <Loading />
                     : error
                         ? <h2>Произошла ошибка</h2>
-                        : items.length > 1
+                        : items.length
                             ? <div className={cl.items}>
                                 {
                                     [...items].reverse().map(item => <Item key={item.id} item={item} onClick={setSong} playlist={''} />)
