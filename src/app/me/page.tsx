@@ -6,7 +6,7 @@ import Item from '../components/item/item'
 import Player from '../components/player/player'
 import MobilePlayer from '../components/mobilePlayer/mobilePlayer'
 import { getDownloadURL, ref } from 'firebase/storage';
-import { auth, storageRef } from '../services/getApp';
+import { auth, storageRef } from '../services/firebase';
 import Loading from '../components/loading/loading'
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import cookie from 'react-cookies'
@@ -34,8 +34,7 @@ const Page = () => {
     }, [user])
 
     useEffect(() => {
-        user && items.length == 0 && getItems(dispatch)
-        user && getPlaylists(dispatch)
+        user && !items.length && getItems(dispatch)
     }, [])
     
 

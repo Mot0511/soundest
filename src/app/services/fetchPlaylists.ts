@@ -1,5 +1,5 @@
 import { get } from "firebase/database"
-import { auth, dbRef } from "./getApp"
+import { auth, dbRef } from "./firebase"
 import { Dispatch } from "redux"
 import { PlaylistsSlice } from "../store/reducers/PlaylistsSlice"
 

@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { getAuth, signOut } from 'firebase/auth';
 import { IconContext } from 'react-icons';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { auth } from '@/app/services/getApp';
+import { auth } from '@/app/services/firebase';
 
 const MobileNav = () => {
 

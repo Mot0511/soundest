@@ -1,6 +1,6 @@
 import { get } from "firebase/database"
 import {ItemsSlice} from "../store/reducers/ItemsSlice"
-import { auth, dbRef, storageRef } from "./getApp"
+import { auth, dbRef, storageRef } from "./firebase"
 import { ItemsActionType } from "../types/ItemsActionTypes"
 import { Dispatch } from "redux"
 import { deleteObject, uploadBytes } from "firebase/storage"
