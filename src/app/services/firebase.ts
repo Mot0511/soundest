@@ -20,5 +20,3 @@ export const db = getDatabase(app)
 export const dbRef = (path: string) => ref(db, path)
 export const storageRef = (path: string) => fireStorageRef(storage, path)
 export const auth = getAuth()
-// export const getLogin = () => 'Mot0511'
-// export const getIsLogined = () => auth.currentUser ? true: false

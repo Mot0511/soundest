@@ -2,19 +2,20 @@
 import { useEffect } from "react"
 import Header from "./components/header/header"
 import cookie from 'react-cookies'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import cl from './style.module.sass'
 import { auth } from "./services/getApp"
 
 const Main = () => {
 
-    const user = auth.currentUser
+    const router = useRouter();
     useEffect(() => {
-        console.log(user)
-        if (user){
-            redirect('/me')
-        }
-    }, [user])
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                router.push('/me')
+            }
+        })
+    }, [])
 
     return (
         <>

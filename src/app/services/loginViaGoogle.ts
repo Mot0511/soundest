@@ -1,6 +1,6 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup, setPersistence, browserLocalPersistence, signInWithRedirect, getRedirectResult} from "firebase/auth";
 import { get, set } from "firebase/database";
-import { app, auth, dbRef } from "./getApp";
+import { app, auth, dbRef } from "./firebase";
 
 export default (callback: () => void) => {
     setPersistence(auth, browserLocalPersistence)
