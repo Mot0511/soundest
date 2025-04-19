@@ -1,4 +1,4 @@
-import { auth, dbRef } from "@/app/services/getApp";
+import { auth, dbRef } from "@/app/services/firebase";
 import { PlaylistsState } from "@/app/types/PlaylistsState";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { set } from "firebase/database";

@@ -1,4 +1,4 @@
-import { auth, dbRef } from "@/app/services/getApp";
+import { auth, dbRef } from "@/app/services/firebase";
 import ItemType from "@/app/types/ItemType";
 import { ItemsState } from "@/app/types/ItemsState";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";

@@ -17,7 +17,7 @@ import { useTypedSelector } from '@/app/hooks/useTypedSelector';
 import Loading from '../loading/loading';
 import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 import cookie from 'react-cookies'
-import { auth } from '@/app/services/getApp';
+import { auth } from '@/app/services/firebase';
 
 const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: number) => void, playlist: string}) => {
 

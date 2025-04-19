@@ -10,7 +10,7 @@ import { getPlaylists } from '@/app/services/fetchPlaylists';
 import cookie from 'react-cookies'
 import { useRouter } from 'next/navigation'
 import { getAuth, signOut } from 'firebase/auth';
-import { auth, dbRef, storageRef } from '@/app/services/getApp';
+import { auth, dbRef, storageRef } from '@/app/services/firebase';
 import { get, set } from 'firebase/database';
 import { getDownloadURL, uploadBytes } from 'firebase/storage';
 import ItemType from '@/app/types/ItemType';

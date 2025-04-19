@@ -15,7 +15,7 @@ import cookie from 'react-cookies'
 
 import { redirect } from 'next/navigation'
 import { getPlaylists } from '../../services/fetchPlaylists';
-import { auth } from '@/app/services/getApp';
+import { auth } from '@/app/services/firebase';
 
 const Page = () => {
     // const [cookies, setCookie, removeCookie] = useCookies();
@@ -34,7 +34,7 @@ const Page = () => {
     }, [user])
 
     useEffect(() => {
-        user && getPlaylists(dispatch)
+        user && !list.length && getPlaylists(dispatch)
     }, [])
 
     const objMap = (obj: any) => {

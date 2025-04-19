@@ -4,7 +4,7 @@ import Header from "./components/header/header"
 import cookie from 'react-cookies'
 import { useRouter } from 'next/navigation'
 import cl from './style.module.sass'
-import { auth } from "./services/getApp"
+import { auth } from "./services/firebase"
 
 const Main = () => {
 
