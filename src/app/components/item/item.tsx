@@ -60,7 +60,7 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
             {
                 isEditing
                     ? <>
-                        <Myinput text='Название' value={title} onChange={(e: any) => setTitle(e.target.value)} style={{marginRight: '10px', marginBottom: window.screen.width < 840 ? '10px' : '0'}} />
+                        <Myinput text='Название' value={title} onChange={(e: any) => setTitle(e.target.value)} style={{marginRight: '10px', marginBottom: typeof window !== 'undefined' && window.screen.width < 840 ? '10px' : '0'}} />
                         <Myinput text='Автор' value={author} onChange={(e: any) => setAuthor(e.target.value)} />
                     </>
                     : <>
