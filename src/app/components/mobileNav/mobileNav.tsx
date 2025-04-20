@@ -6,6 +6,7 @@ import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
 import { addItem, getItems } from '@/app/services/fetchItems';
 import { ItemsSlice } from '@/app/store/reducers/ItemsSlice';
 import { useTypedSelector } from '@/app/hooks/useTypedSelector';
+import cookie from 'react-cookies'
 import { useRouter } from 'next/navigation'
 import { getAuth, signOut } from 'firebase/auth';
 import { IconContext } from 'react-icons';
@@ -47,7 +48,7 @@ const MobileNav = () => {
                 <li><Link href='/me/playlists'>Плейлисты</Link></li>
             </ul>
             <div className={cl.nav__btns}>
-                <input multiple onChange={user && uploadSong} type="file" id='file' hidden accept='.mp3' />
+                <input multiple onChange={uploadSong} type="file" id='file' hidden accept='.mp3' />
                 <Fillbutton style={{marginBottom: '10px', width: '100%'}} fullwidth={'true'}><label htmlFor='file'>Загрузить музыку</label></Fillbutton>
                 <Fillbutton onClick={logout} style={{marginBottom: '50px', width: '100%', height: '40px'}} fullwidth={'true'}>Выйти</Fillbutton>
             </div>
