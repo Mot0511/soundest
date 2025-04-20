@@ -83,7 +83,7 @@ const Page = () => {
             <div className={cl.playerContainer}>
                 {
                     url
-                        ? window.screen.width >= 840
+                        ? typeof window !== 'undefined' && window.screen.width >= 840
                             ? <Player data={{...items[step], url}} isPlaying={isPlaying} setIsPlaying={setIsPlaying} leaf={leaf} />
                             : <MobilePlayer data={{...items[step], url}} isPlaying={isPlaying} setIsPlaying={setIsPlaying} leaf={leaf} /> 
                         : <></>

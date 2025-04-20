@@ -13,7 +13,7 @@ const layout = ({children}: {children: React.ReactNode}) => {
     <Provider store={setupStore()}>
       <div className="service">
         {
-          window.screen.width >= 840
+          typeof window !== 'undefined' && window.screen.width >= 840
             ? <Nav />
             : <MobileNav />
         }
