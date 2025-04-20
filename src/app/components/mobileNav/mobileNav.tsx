@@ -6,8 +6,6 @@ import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
 import { addItem, getItems } from '@/app/services/fetchItems';
 import { ItemsSlice } from '@/app/store/reducers/ItemsSlice';
 import { useTypedSelector } from '@/app/hooks/useTypedSelector';
-import { getPlaylists } from '@/app/services/fetchPlaylists';
-import cookie from 'react-cookies'
 import { useRouter } from 'next/navigation'
 import { getAuth, signOut } from 'firebase/auth';
 import { IconContext } from 'react-icons';
