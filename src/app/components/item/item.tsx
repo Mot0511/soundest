@@ -34,6 +34,7 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
 
     const objMap = (obj: any) => {
         const array: React.ReactNode[] = []
+        console.log(obj)
         for (let i in obj){
             array.push(
             <div className={cl.item+' '+cl.itemActive} onClick={() => {

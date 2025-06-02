@@ -31,7 +31,7 @@ const Page = () => {
 
     useEffect(() => {
         if (!user){
-            redirect('/login')
+            redirect('/')
         }
     }, [user])
 
@@ -43,7 +43,7 @@ const Page = () => {
     useEffect(() => {
         if (isLoading) return 
         setItems(Allitems.filter((item: ItemType) => item != undefined && list[name].includes(item.id)))
-    }, [isLoading]) 
+    }, [isLoading, list]) 
     
 
     const setSong = (id: number) => {
