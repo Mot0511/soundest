@@ -26,6 +26,7 @@ const Page = () => {
     const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
     const {items, isLoading, error} = useTypedSelector(states => states.items)
+    const {list} = useTypedSelector(states => states.playlists)
     
     useEffect(() => {
         if (!user){
@@ -35,6 +36,7 @@ const Page = () => {
 
     useEffect(() => {
         user && !items.length && getItems(dispatch)
+        user && getPlaylists(dispatch)
     }, [])
     
 
