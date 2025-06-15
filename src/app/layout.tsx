@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import './globals.css'
 import Nav from './components/nav/nav'
 import { Provider } from 'react-redux';
@@ -21,13 +21,14 @@ export const metadata: Metadata = {
 const layout = ({children}: {children: React.ReactNode}) => {
 
   return (
-    
       <html>
         <head>
           <title>Soundest</title>
         </head>
         <body>
+          <Suspense>
             {children}
+          </Suspense>
         </body>
       </html>
   );
