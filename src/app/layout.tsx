@@ -26,7 +26,7 @@ const layout = ({children}: {children: React.ReactNode}) => {
           <title>Soundest</title>
         </head>
         <body>
-          <Suspense>
+          <Suspense fallback={<>Loading</>}>
             {children}
           </Suspense>
         </body>
