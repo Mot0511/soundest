@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref } from "firebase/database";
 import { getStorage, ref as fireStorageRef } from "firebase/storage";
 import { getAuth } from 'firebase/auth';
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCNxKlCFIpHmyyyCfb7FWorhMaxwXvVs30",
@@ -20,3 +21,4 @@ export const db = getDatabase(app)
 export const dbRef = (path: string) => ref(db, path)
 export const storageRef = (path: string) => fireStorageRef(storage, path)
 export const auth = getAuth()
+export const analytics = getAnalytics(app);
