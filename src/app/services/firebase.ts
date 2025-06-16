@@ -21,4 +21,4 @@ export const db = getDatabase(app)
 export const dbRef = (path: string) => ref(db, path)
 export const storageRef = (path: string) => fireStorageRef(storage, path)
 export const auth = getAuth()
-export const analytics = getAnalytics(app);
+// export const analytics = getAnalytics(app);
