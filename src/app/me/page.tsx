@@ -6,7 +6,7 @@ import Item from '../components/item/item'
 import Player from '../components/player/player'
 import MobilePlayer from '../components/mobilePlayer/mobilePlayer'
 import { getDownloadURL, ref } from 'firebase/storage';
-import { auth, storageRef } from '../services/firebase';
+import { app, auth, storageRef } from '../services/firebase';
 import Loading from '../components/loading/loading'
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import cookie from 'react-cookies'
@@ -16,6 +16,7 @@ import { getItems } from '../services/fetchItems';
 import { getPlaylists } from '../services/fetchPlaylists';
 import { useTypedDispatch } from '../hooks/useTypedDispatch';
 import Head from 'next/head';
+import { getAnalytics } from 'firebase/analytics';
 
 const Page = () => {
 
@@ -31,6 +32,8 @@ const Page = () => {
     useEffect(() => {
         if (!user){
             redirect('/')
+        } else {
+            const analytics = getAnalytics(app);
         }
     }, [user])
 
