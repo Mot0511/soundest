@@ -6,7 +6,6 @@ import Item from '../components/item/item'
 import Player from '../components/player/player'
 import MobilePlayer from '../components/mobilePlayer/mobilePlayer'
 import { getDownloadURL, ref } from 'firebase/storage';
-import { app, auth, storageRef } from '../services/firebase';
 import Loading from '../components/loading/loading'
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import cookie from 'react-cookies'
@@ -17,10 +16,9 @@ import { getPlaylists } from '../services/fetchPlaylists';
 import { useTypedDispatch } from '../hooks/useTypedDispatch';
 import Head from 'next/head';
 import { getAnalytics } from 'firebase/analytics';
+import { supabase, getPublicURL } from '../services/supabase';
 
 const Page = () => {
-
-    const user = auth.currentUser
 
     const dispatch = useTypedDispatch()
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -28,18 +26,10 @@ const Page = () => {
     const [step, setStep] = useState<number>(0)
     const {items, isLoading, error} = useTypedSelector(states => states.items)
     const {list} = useTypedSelector(states => states.playlists)
-    
-    useEffect(() => {
-        if (!user){
-            redirect('/')
-        } else {
-            const analytics = getAnalytics(app);
-        }
-    }, [user])
 
     useEffect(() => {
-        user && !items.length && getItems(dispatch)
-        user && getPlaylists(dispatch)
+        !items.length && getItems(dispatch)
+        getPlaylists(dispatch)
     }, [])
     
 
@@ -62,11 +52,13 @@ const Page = () => {
         getUrl(id)
     }
 
-    const getUrl = (id: number) => {
-        getDownloadURL(storageRef(`/${user?.uid}/${id}.mp3`))
-            .then(url =>{ 
-                setUrl(url)
-            })
+    const getUrl = async (id: number) => {
+        const user = await supabase.auth.getUser()
+        const uid = user.data.user?.id;
+        if (uid) {
+            const url = getPublicURL(`songs/${uid}/${id}.mp3`)
+            setUrl(url)
+        }
     }
 
     return (

@@ -10,29 +10,31 @@ import { getPlaylists } from '@/app/services/fetchPlaylists';
 import cookie from 'react-cookies'
 import { useRouter } from 'next/navigation'
 import { getAuth, signOut } from 'firebase/auth';
-import { auth, dbRef, storageRef } from '@/app/services/firebase';
 import { get, set } from 'firebase/database';
 import { getDownloadURL, uploadBytes } from 'firebase/storage';
 import ItemType from '@/app/types/ItemType';
+import { supabase } from '@/app/services/supabase';
 
 const Nav = () => {
 
-    const user = auth.currentUser
+    const user = supabase.auth.getUser();
     
     const dispatch = useTypedDispatch()
     const {fetchItems} = ItemsSlice.actions
     const isLoading = useTypedSelector(states => states.items.isLoading)
     const router = useRouter()
     
+    
     const uploadSong = async () => {
         const files = (document.getElementById('file') as HTMLInputElement).files
+        const user = await supabase.auth.getUser()
+        console.log(files)
         user && addItem(files, dispatch)
     }
 
-    const logout = () => {
-        signOut(auth).then(() => {
-            router.push('/')
-        })
+    const logout = async () => {
+        await supabase.auth.signOut()
+        router.push('/')
     }
 
     return (

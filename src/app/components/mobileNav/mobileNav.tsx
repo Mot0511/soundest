@@ -11,11 +11,10 @@ import { useRouter } from 'next/navigation'
 import { getAuth, signOut } from 'firebase/auth';
 import { IconContext } from 'react-icons';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { auth } from '@/app/services/firebase';
+import { supabase } from '@/app/services/supabase';
 
 const MobileNav = () => {
 
-    const user = auth.currentUser
     const dispatch = useTypedDispatch()
     const {fetchItems} = ItemsSlice.actions
     const isLoading = useTypedSelector(states => states.items.isLoading)
@@ -24,13 +23,12 @@ const MobileNav = () => {
     
     const uploadSong = async () => {
         const files = (document.getElementById('file') as HTMLInputElement).files
+        const user = await supabase.auth.getUser();
         user && addItem(files, dispatch)
     }
 
-    const logout = () => {
-        signOut(auth).then(() => {
-            router.push('/')
-        })
+    const logout = async () => {
+        await supabase.auth.signOut()
     }
 
     return (

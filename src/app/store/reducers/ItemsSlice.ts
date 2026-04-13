@@ -1,4 +1,3 @@
-import { auth, dbRef } from "@/app/services/firebase";
 import ItemType from "@/app/types/ItemType";
 import { ItemsState } from "@/app/types/ItemsState";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -29,18 +28,10 @@ export const ItemsSlice = createSlice({
             const item = action.payload
             state.items = [...state.items, item]
             state.isLoading = false
-            const uid = auth.currentUser?.uid
-            set(dbRef(`users/${uid}/songs`), state.items).then(() => {
-                console.log('Song has loaded')
-            })
         },
         removeItem(state, action: PayloadAction<number>){
             const id = action.payload
             state.items = state.items.filter(item => item.id != id)
-            const uid = auth.currentUser?.uid
-            set(dbRef(`users/${uid}/songs`), state.items).then(() => {
-                console.log('Song has removed')
-            })
         },
         editItem(state, action: PayloadAction<[number, {title: string, author: string}]>){
             const id = action.payload[0]
@@ -51,10 +42,7 @@ export const ItemsSlice = createSlice({
                     state.items[i].author = item.author
                 }
             }
-            const uid = auth.currentUser?.uid
-            set(dbRef(`users/${uid}/songs`), state.items).then(() => {
-                console.log('Song edited')
-            })
+            state.isLoading = false
         }
     }
 })

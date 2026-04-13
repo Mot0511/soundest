@@ -1,17 +1,17 @@
 'use client'
 import { useEffect } from "react"
 import Header from "./components/header/header"
-import cookie from 'react-cookies'
 import { useRouter } from 'next/navigation'
 import cl from './style.module.sass'
-import { auth } from "./services/firebase"
+import {supabase} from "./services/supabase"
 
 const Main = () => {
 
     const router = useRouter();
     useEffect(() => {
-        auth.onAuthStateChanged(user => {
-            if (user) {
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                console.log(session.user?.email)
                 router.push('/me')
             }
         })

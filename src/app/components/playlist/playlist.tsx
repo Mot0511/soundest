@@ -12,7 +12,6 @@ import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 import Myinput from '../UI/myinput/myinput';
 import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
 import cookie from 'react-cookies'
-import { auth } from '@/app/services/firebase';
 
 
 const Playlist = ({name, data}: {name: string, data: number[]}) => {

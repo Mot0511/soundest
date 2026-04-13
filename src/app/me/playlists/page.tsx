@@ -12,29 +12,21 @@ import { FaCheck } from 'react-icons/fa';
 import { useTypedDispatch } from '../../hooks/useTypedDispatch';
 import { PlaylistsSlice } from '../../store/reducers/PlaylistsSlice';
 import cookie from 'react-cookies'
-
 import { redirect } from 'next/navigation'
 import { getPlaylists } from '../../services/fetchPlaylists';
-import { auth } from '@/app/services/firebase';
+import {addPlaylist} from '@/app/services/fetchPlaylists'
+import { GSP_NO_RETURNED_VALUE } from 'next/dist/lib/constants';
 
 const Page = () => {
     // const [cookies, setCookie, removeCookie] = useCookies();
     
-    const user = auth.currentUser
     const {list, isLoading, error} = useTypedSelector(states => states.playlists)
     const dispatch = useTypedDispatch()
-    const {addPlaylist} = PlaylistsSlice.actions
     const [isCreating, setIsCreating] = useState<boolean>(false)
     const [name, setName] = useState<string>('')
 
     useEffect(() => {
-        if (!user){
-            redirect('/')
-        }   
-    }, [user])
-
-    useEffect(() => {
-        user && !list.length && getPlaylists(dispatch)
+        getPlaylists(dispatch)
     }, [])
 
     const objMap = (obj: any) => {
@@ -46,7 +38,8 @@ const Page = () => {
     }
 
     const createPlaylist = () => {
-        user && dispatch(addPlaylist(name))
+        if (!name) return
+        addPlaylist(dispatch, name)
     }
 
     return (

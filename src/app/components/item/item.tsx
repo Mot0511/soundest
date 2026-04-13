@@ -6,7 +6,6 @@ import ItemType from '@/app/types/ItemType';
 import Fillbutton from '../UI/fillbutton';
 import { RxCross2 } from "react-icons/rx";
 import { IconContext } from 'react-icons';
-import { removeSong } from '@/app/services/fetchItems';
 import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
 import Myinput from '../UI/myinput/myinput'
 import { MdEdit } from "react-icons/md";
@@ -16,8 +15,8 @@ import { GoPlus } from "react-icons/go";
 import { useTypedSelector } from '@/app/hooks/useTypedSelector';
 import Loading from '../loading/loading';
 import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
-import cookie from 'react-cookies'
-import { auth } from '@/app/services/firebase';
+import { addItemToPlaylist, removeItemFromPlaylist } from '@/app/services/fetchPlaylists';
+import { editItem, removeItem } from '@/app/services/fetchItems'
 
 const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: number) => void, playlist: string}) => {
 
@@ -28,18 +27,16 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
     const [isAdding, setIsAdding] = useState<boolean>(false)
 
     const dispatch = useTypedDispatch()
-    const {editItem} = ItemsSlice.actions
-    const {addItem, removeItem} = PlaylistsSlice.actions
+    const {addItem} = PlaylistsSlice.actions
     const {list, isLoading, error} = useTypedSelector(states => states.playlists)
 
     const objMap = (obj: any) => {
         const array: React.ReactNode[] = []
-        console.log(obj)
         for (let i in obj){
             array.push(
             <div className={cl.item+' '+cl.itemActive} onClick={() => {
                 setIsAdding(!isAdding)
-                dispatch(addItem([i, item.id]))
+                addItemToPlaylist(dispatch, item.id, i)
             }}>
                 <p className={cl.title}>{i}</p>
             </div>)
@@ -48,10 +45,10 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
     }
     
     const remove = () => {
-        removeSong(dispatch, item.id, list)
+        removeItem(dispatch, item.id, list)
     }
     const removeFromPlaylist = () => {
-        dispatch(removeItem([playlist, item.id]))
+        removeItemFromPlaylist(dispatch, item.id, playlist)
     }
 
     return (
@@ -83,7 +80,7 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
             {
                 isEditing
                     ? <Fillbutton onClick={() => {
-                        dispatch(editItem([item.id, {title: title, author: author}]))
+                        editItem(dispatch, item.id, title, author)
                         setIsEditing(false)
 
                     }} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>

@@ -49,6 +49,7 @@ const Player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
     }, [seconds])
 
     useEffect(() => {
+        console.log(audioRef)
         setDuration(audioRef?.current?.duration)
     }, [audioRef?.current?.duration])
 

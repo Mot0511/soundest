@@ -7,7 +7,6 @@ import ItemType from '@/app/types/ItemType';
 import { useTypedSelector } from '@/app/hooks/useTypedSelector';
 import Item from '../../../components/item/item'
 import { getDownloadURL } from 'firebase/storage';
-import { auth, storageRef } from '@/app/services/firebase';
 import Player from '../../../components/player/player'
 import Loading from '../../../components/loading/loading'
 import cookie from 'react-cookies'
@@ -15,10 +14,9 @@ import { redirect } from 'next/navigation'
 import { getPlaylists } from '@/app/services/fetchPlaylists';
 import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
 import { getItems } from '@/app/services/fetchItems';
+import { getPublicURL, supabase } from '@/app/services/supabase';
 
 const Page = () => {
-    const user = auth.currentUser
-
     const name = decodeURIComponent(useParams<{name: string}>().name)
     const [isPlaying, setIsPlaying] = useState<boolean>(false);  
     const [url, setUrl] = useState<string>('')
@@ -30,22 +28,16 @@ const Page = () => {
     const {items: Allitems, isLoading, error} = useTypedSelector(states => states.items)
 
     useEffect(() => {
-        if (!user){
-            redirect('/')
-        }
-    }, [user])
-
-    useEffect(() => {
-        user && !list.length && getPlaylists(dispatch)
-        user && !Allitems.length && getItems(dispatch)
+        !list.length && getPlaylists(dispatch)
+        !Allitems.length && getItems(dispatch)
+        setItems(Allitems.filter((item: ItemType) => item != undefined && list[name].includes(item.id)))
     }, [])
 
     useEffect(() => {
-        if (isLoading) return 
+        if (isLoading) return
         setItems(Allitems.filter((item: ItemType) => item != undefined && list[name].includes(item.id)))
-    }, [isLoading, list]) 
+    }, [list]) 
     
-
     const setSong = (id: number) => {
         for (let i in items){
             if (items[i].id == id){
@@ -56,11 +48,13 @@ const Page = () => {
         setIsPlaying(true)
         getUrl(id)
     }
-    const getUrl = (id: number) => {
-        getDownloadURL(storageRef(`/${user?.uid}/${id}.mp3`))
-            .then(url =>{ 
-                setUrl(url)
-            })
+    const getUrl = async (id: number) => {
+        const user = await supabase.auth.getUser()
+        const uid = user.data.user?.id;
+        if (uid) {
+            const url = getPublicURL(`songs/${uid}/${id}.mp3`)
+            setUrl(url)
+        }
     }
     const leaf = () => {
         const newStep = Math.floor(Math.random() * items.length)

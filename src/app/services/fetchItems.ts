@@ -1,68 +1,84 @@
 import { get } from "firebase/database"
 import {ItemsSlice} from "../store/reducers/ItemsSlice"
-import { auth, dbRef, storageRef } from "./firebase"
 import { ItemsActionType } from "../types/ItemsActionTypes"
-import { Dispatch } from "redux"
 import { deleteObject, uploadBytes } from "firebase/storage"
 import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
+import {supabase} from "./supabase";
+import { Dispatch } from "@reduxjs/toolkit";
+import { Exception } from "sass";
+import { removeItemFromPlaylist } from "./fetchPlaylists";
 
 
-export const getItems = (dispatch: Dispatch<ItemsActionType>) => {
+export const getItems = async (dispatch: Dispatch<ItemsActionType>) => {
     const {fetchItems, fetchItemsSuccess, fetchItemsError} = ItemsSlice.actions
     dispatch(fetchItems(true))
-    const uid = auth.currentUser?.uid
-    try {
-        get(dbRef(`users/${uid}/songs`)).then(snap => {
-            if (snap.val()){
-                dispatch(fetchItemsSuccess(snap.val()))
+    const userdata = await supabase.auth.getUser()
+    const uid = userdata.data.user?.id;
+    if (uid) {
+        try {
+            const {data} = await supabase.from('songs').select('id, title, author').eq('uid', uid)
+            if (data) {
+                dispatch(fetchItemsSuccess(data))
             } else {
                 dispatch(fetchItemsSuccess([]))
             }
-        })
-    } catch (e) {
-        dispatch(fetchItemsError(true))
+        } catch (e) {
+            dispatch(fetchItemsError(true))
+        }
     }
 }
 
-export const addItem = (files: any, dispatch: Dispatch<ItemsActionType>) => {
+export const addItem = async (files: any, dispatch: Dispatch<ItemsActionType>) => {
     const {fetchItems, addItem} = ItemsSlice.actions
-    const uid = auth.currentUser?.uid
+    dispatch(fetchItems(true))
+    const userdata = await supabase.auth.getUser();
+    const uid = userdata.data.user?.id;
     if (uid) {
         for (let file of files){
             const id = Math.floor(Date.now() * Math.random())
             const title = file.name.split('.')[0]
-            dispatch(fetchItems(true))
-            uploadBytes(storageRef(`${uid}/${id}.mp3`), file).then(() => {
-                dispatch(addItem({id: id, title: title, author: ''}))
+            console.log(id, title)
+            await supabase.from('songs').insert({
+                'id': id,
+                'title': title,
+                'author': '',
+                'uid': uid
             })
+            await supabase.storage.from('main').upload(`songs/${uid}/${id}.mp3`, file, {
+                upsert: true
+            });
+            dispatch(addItem({id: id, title: title, author: ''}))
         }
     }
 }
 
-export const removeSong = (dispatch: Dispatch<{type: any, payload: number | boolean}>, id: number, list: any) => {
+export const removeItem = async (dispatch: Dispatch<{type: any, payload: number | boolean}>, id: number, list: {}) => {
     const {fetchItems, removeItem} = ItemsSlice.actions
-    const {removeItem: removeItemFromPlaylist} = PlaylistsSlice.actions
-    const uid = auth.currentUser?.uid
+    const userdata = await supabase.auth.getUser();
+    const uid = userdata.data.user?.id;
     if (uid) {
-        dispatch(fetchItems(true))
         dispatch(removeItem(id))
-        deleteObject(storageRef(`${uid}/${id}.mp3`))
-
-        let playlists = []
-
-        for (let i in list){
-            if (list[i].includes(id)){
-                playlists.push(i)
+        await supabase.from('songs').delete().eq('id', id);
+        await supabase.storage.from('main').remove([`songs/${uid}/${id}.mp3`]);
+        for (let playlist in list){
+            //@ts-ignore
+            if (list[playlist].includes(id)){
+                removeItemFromPlaylist(dispatch, id, playlist)
             }
         }
-        console.log(playlists)
-        playlists.forEach((playlist: string) => {
-            // @ts-ignore
-            dispatch(removeItemFromPlaylist([login, playlist, id]))
-        })
-        
-        dispatch(fetchItems(false))
     }
-    
+}
 
+export const editItem = async (dispatch: Dispatch<{type: any, payload: [number, {title: string, author: string}]}>, id: number, newTitle: string, newAuthor: string) => {
+    const {editItem} = ItemsSlice.actions;
+    const userdata = await supabase.auth.getUser();
+    const uid = userdata.data.user?.id;
+    console.log(newTitle)
+    if (uid) {
+        dispatch(editItem([id, {title: newTitle, author: newAuthor}]))
+        await supabase.from('songs').update({
+            'title': newTitle,
+            'author': newAuthor
+        }).eq('id', id)
+    }
 }
