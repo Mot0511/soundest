@@ -45,7 +45,7 @@ const Nav = () => {
                 <li><Link href='/me/playlists'>Плейлисты</Link></li>
             </ul>
             <div>
-                <input multiple onChange={uploadSong} type="file" id='file' hidden accept='.mp3' />
+                <input multiple onChange={uploadSong} type="file" id='file' hidden accept='.mp3,.flac,.wav,.m4a,audio/mpeg,audio/flac,audio/wav,audio/wave,audio/x-wav,audio/mp4,audio/x-m4a' />
                 <Fillbutton style={{marginBottom: '10px', width: '100%'}} fullwidth={'true'}><label htmlFor='file'>Загрузить музыку</label></Fillbutton>
                 <Fillbutton onClick={logout} style={{marginBottom: '50px', width: '100%', height: '40px'}} fullwidth={'true'}>Выйти</Fillbutton>
             </div>

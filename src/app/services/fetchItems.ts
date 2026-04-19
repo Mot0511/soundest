@@ -7,6 +7,12 @@ import {supabase} from "./supabase";
 import { Dispatch } from "@reduxjs/toolkit";
 import { Exception } from "sass";
 import { removeItemFromPlaylist } from "./fetchPlaylists";
+import ItemType from "../types/ItemType";
+import {
+    extensionFromFileName,
+    isAllowedAudioExtension,
+    stripAudioExtension,
+} from "../lib/audioFormats";
 
 
 export const getItems = async (dispatch: Dispatch<ItemsActionType>) => {
@@ -16,9 +22,13 @@ export const getItems = async (dispatch: Dispatch<ItemsActionType>) => {
     const uid = userdata.data.user?.id;
     if (uid) {
         try {
-            const {data} = await supabase.from('songs').select('id, title, author').eq('uid', uid)
+            const {data} = await supabase.from('songs').select('id, title, author, format').eq('uid', uid)
             if (data) {
-                dispatch(fetchItemsSuccess(data))
+                const normalized: ItemType[] = data.map((row) => ({
+                    ...row,
+                    format: row.format ?? 'mp3',
+                }))
+                dispatch(fetchItemsSuccess(normalized))
             } else {
                 dispatch(fetchItemsSuccess([]))
             }
@@ -35,31 +45,38 @@ export const addItem = async (files: any, dispatch: Dispatch<ItemsActionType>) =
     const uid = userdata.data.user?.id;
     if (uid) {
         for (let file of files){
+            const ext = extensionFromFileName(file.name)
+            if (!isAllowedAudioExtension(ext)) {
+                console.warn('Пропуск файла: неподдерживаемый формат', file.name)
+                continue
+            }
             const id = Math.floor(Date.now() * Math.random())
-            const title = file.name.split('.')[0]
+            const title = stripAudioExtension(file.name)
             console.log(id, title)
             await supabase.from('songs').insert({
                 'id': id,
                 'title': title,
                 'author': '',
-                'uid': uid
+                'uid': uid,
+                'format': ext,
             })
-            await supabase.storage.from('main').upload(`songs/${uid}/${id}.mp3`, file, {
+            await supabase.storage.from('main').upload(`songs/${uid}/${id}.${ext}`, file, {
                 upsert: true
             });
-            dispatch(addItem({id: id, title: title, author: ''}))
+            dispatch(addItem({id: id, title: title, author: '', format: ext}))
         }
     }
 }
 
-export const removeItem = async (dispatch: Dispatch<{type: any, payload: number | boolean}>, id: number, list: {}) => {
+export const removeItem = async (dispatch: Dispatch<{type: any, payload: number | boolean}>, id: number, list: {}, format?: string) => {
     const {fetchItems, removeItem} = ItemsSlice.actions
     const userdata = await supabase.auth.getUser();
     const uid = userdata.data.user?.id;
     if (uid) {
+        const ext = format ?? 'mp3'
         dispatch(removeItem(id))
         await supabase.from('songs').delete().eq('id', id);
-        await supabase.storage.from('main').remove([`songs/${uid}/${id}.mp3`]);
+        await supabase.storage.from('main').remove([`songs/${uid}/${id}.${ext}`]);
         for (let playlist in list){
             //@ts-ignore
             if (list[playlist].includes(id)){

@@ -46,13 +46,14 @@ const Page = () => {
             }
         }
         setIsPlaying(true)
-        getUrl(id)
+        getUrl(id, Allitems.find((i) => i.id === id)?.format)
     }
-    const getUrl = async (id: number) => {
+    const getUrl = async (id: number, format?: string) => {
         const user = await supabase.auth.getUser()
         const uid = user.data.user?.id;
         if (uid) {
-            const url = getPublicURL(`songs/${uid}/${id}.mp3`)
+            const ext = format ?? 'mp3'
+            const url = getPublicURL(`songs/${uid}/${id}.${ext}`)
             setUrl(url)
         }
     }
@@ -60,7 +61,7 @@ const Page = () => {
         const newStep = Math.floor(Math.random() * items.length)
         const newSong = items[newStep]
         setIsPlaying(true)
-        getUrl(newSong.id)
+        getUrl(newSong.id, newSong.format)
         setStep(newStep)
     }
 
