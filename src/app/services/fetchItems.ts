@@ -22,11 +22,11 @@ export const getItems = async (dispatch: Dispatch<ItemsActionType>) => {
     const uid = userdata.data.user?.id;
     if (uid) {
         try {
-            const {data} = await supabase.from('songs').select('id, title, author, format').eq('uid', uid)
+            const {data} = await supabase.from('songs').select('id, title, author, file_ext').eq('uid', uid)
             if (data) {
                 const normalized: ItemType[] = data.map((row) => ({
                     ...row,
-                    format: row.format ?? 'mp3',
+                    format: row.file_ext ?? 'mp3',
                 }))
                 dispatch(fetchItemsSuccess(normalized))
             } else {
@@ -50,7 +50,7 @@ export const addItem = async (files: any, dispatch: Dispatch<ItemsActionType>) =
                 console.warn('Пропуск файла: неподдерживаемый формат', file.name)
                 continue
             }
-            const id = Math.floor(Date.now() * Math.random())
+            const id = Math.floor(Date.now() * Math.random() / 10000)
             const title = stripAudioExtension(file.name)
             console.log(id, title)
             await supabase.from('songs').insert({
@@ -58,7 +58,7 @@ export const addItem = async (files: any, dispatch: Dispatch<ItemsActionType>) =
                 'title': title,
                 'author': '',
                 'uid': uid,
-                'format': ext,
+                'file_ext': ext,
             })
             await supabase.storage.from('main').upload(`songs/${uid}/${id}.${ext}`, file, {
                 upsert: true
