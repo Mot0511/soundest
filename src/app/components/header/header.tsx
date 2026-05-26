@@ -15,7 +15,7 @@ const Header = () => {
                 <li className={cl.menu__item}><a href="#aboutme">о создателе</a></li>
             </ul>
             <div>
-                <p className={cl.download}>скачайте приложение для Android <a href="https://www.rustore.ru/catalog/app/com.ms.sndst" style={{textDecoration: 'underline'}} target='_blank'>из Rustore</a> или <a href="https://drive.google.com/file/d/1AjmP--ow_N9fDvu4Uwgdwjc8brtzjDUT/view?usp=drive_link" style={{textDecoration: 'underline'}} target='_blank'>apk файл</a></p>
+                <p className={cl.download}>скачайте приложение для Android <a href="https://www.rustore.ru/catalog/app/com.ms.sndst" style={{textDecoration: 'underline'}} target='_blank'>из Rustore</a> или <a href="https://disk.yandex.ru/d/EzXqAMbY6pZjgQ" style={{textDecoration: 'underline'}} target='_blank'>apk файл</a></p>
                 <Fillbutton onClick={() => loginViaGoogle(() => {
                     router.push('/me')
                 })}>Войти</Fillbutton>
