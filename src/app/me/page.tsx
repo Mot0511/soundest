@@ -11,12 +11,12 @@ import { useTypedSelector } from '../hooks/useTypedSelector';
 import cookie from 'react-cookies'
 import { redirect } from 'next/navigation'
 import { MdTheaterComedy } from 'react-icons/md';
-import { getItems } from '../services/fetchItems';
+import { getItems, getURL } from '../services/fetchItems';
 import { getPlaylists } from '../services/fetchPlaylists';
 import { useTypedDispatch } from '../hooks/useTypedDispatch';
 import Head from 'next/head';
 import { getAnalytics } from 'firebase/analytics';
-import { supabase, getPublicURL } from '../services/supabase';
+import { supabase } from '../services/supabase';
 
 const Page = () => {
 
@@ -57,7 +57,7 @@ const Page = () => {
         const uid = user.data.user?.id;
         if (uid) {
             const ext = format ?? 'mp3'
-            const url = getPublicURL(`songs/${uid}/${id}.${ext}`)
+            const url = getURL(id)
             setUrl(url)
         }
     }

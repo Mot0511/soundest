@@ -13,8 +13,8 @@ import cookie from 'react-cookies'
 import { redirect } from 'next/navigation'
 import { getPlaylists } from '@/app/services/fetchPlaylists';
 import { useTypedDispatch } from '@/app/hooks/useTypedDispatch';
-import { getItems } from '@/app/services/fetchItems';
-import { getPublicURL, supabase } from '@/app/services/supabase';
+import { getItems, getURL } from '@/app/services/fetchItems';
+import { supabase } from '@/app/services/supabase';
 
 const Page = () => {
     const name = decodeURIComponent(useParams<{name: string}>().name)
@@ -53,7 +53,7 @@ const Page = () => {
         const uid = user.data.user?.id;
         if (uid) {
             const ext = format ?? 'mp3'
-            const url = getPublicURL(`songs/${uid}/${id}.${ext}`)
+            const url = getURL(id)
             setUrl(url)
         }
     }
