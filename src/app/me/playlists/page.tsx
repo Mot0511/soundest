@@ -26,7 +26,7 @@ const Page = () => {
     const [name, setName] = useState<string>('')
 
     useEffect(() => {
-        getPlaylists(dispatch)
+        !Object.keys(list).length && getPlaylists(dispatch)
     }, [])
 
     const objMap = (obj: any) => {
