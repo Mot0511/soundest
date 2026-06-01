@@ -28,7 +28,6 @@ const Nav = () => {
     const uploadSong = async () => {
         const files = (document.getElementById('file') as HTMLInputElement).files
         const user = await supabase.auth.getUser()
-        console.log(files)
         user && addItem(files, dispatch)
     }
 

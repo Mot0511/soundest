@@ -17,6 +17,7 @@ import { useTypedDispatch } from '../hooks/useTypedDispatch';
 import Head from 'next/head';
 import { getAnalytics } from 'firebase/analytics';
 import { supabase } from '../services/supabase';
+import Shimmer from '../components/shimmer/shimmer';
 
 const Page = () => {
 
@@ -24,7 +25,7 @@ const Page = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
-    const {items, isLoading, error} = useTypedSelector(states => states.items)
+    const {items, isLoading, error, uploadingCount} = useTypedSelector(states => states.items)
     const {list} = useTypedSelector(states => states.playlists)
 
     useEffect(() => {
@@ -66,13 +67,23 @@ const Page = () => {
         <>
             <h1 className='heading'>Моя музыка</h1>
             <div className={cl.items}>
+            
             {
                 isLoading
-                    ? <Loading />
+                    ? <div className='center'>
+                        <Loading />
+                    </div>
                     : error
                         ? <h2>Произошла ошибка</h2>
                         : items.length
-                            ? [...items].reverse().map(item => <Item key={item.id} item={item} onClick={setSong} playlist={''} />)
+                            ? <>
+                                {
+                                    Array.from({length: uploadingCount}, (v, k) => <Shimmer />)
+                                }
+                                {
+                                    [...items].reverse().map(item => <Item key={item.id} item={item} onClick={setSong} playlist={''} />)
+                                }
+                            </>
                             : <h2>У вас нет музыки</h2>      
             } 
             </div>
@@ -81,7 +92,7 @@ const Page = () => {
                     url
                         ? typeof window !== 'undefined' && window.screen.width >= 840
                             ? <Player data={{...items[step], url}} isPlaying={isPlaying} setIsPlaying={setIsPlaying} leaf={leaf} />
-                            : <MobilePlayer data={{...items[step], url}} isPlaying={isPlaying} setIsPlaying={setIsPlaying} leaf={leaf} /> 
+                            : <MobilePlayer data={{...items[step], url}} isPlaying={isPlaying} setIsPlaying={setIsPlaying} leaf={leaf} />
                         : <></>
                 }
             </div>
