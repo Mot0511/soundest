@@ -43,8 +43,8 @@ export const getItems = async (dispatch: Dispatch<ItemsActionType>) => {
 }
 
 export const addItem = async (files: any, dispatch: Dispatch<ItemsActionType>) => {
-    const {fetchItems, addItem} = ItemsSlice.actions
-    dispatch(fetchItems(true))
+    const {setUploadingCount, addItem, uploadingCountDecrement} = ItemsSlice.actions
+    dispatch(setUploadingCount(files.length))
     const userdata = await supabase.auth.getUser();
     const uid = userdata.data.user?.id;
     if (uid) {
@@ -73,7 +73,9 @@ export const addItem = async (files: any, dispatch: Dispatch<ItemsActionType>) =
             //     upsert: true
             // });
             dispatch(addItem({id: id, title: title, author: '', format: ext}))
+            dispatch(uploadingCountDecrement({}))
         }
+        
     }
 }
 

@@ -4,6 +4,7 @@ import Header from "./components/header/header"
 import { useRouter } from 'next/navigation'
 import cl from './style.module.sass'
 import {supabase} from "./services/supabase"
+import BlinkLabel from "./components/blink_label/blink_label"
 
 const Main = () => {
 

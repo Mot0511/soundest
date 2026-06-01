@@ -2,6 +2,7 @@ import ItemType from "./ItemType";
 
 export interface ItemsState {
     items: ItemType[]
-    isLoading: boolean
-    error: boolean
+    isLoading: boolean,
+    uploadingCount: number
+    error: boolean,
 }

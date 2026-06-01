@@ -6,6 +6,7 @@ import { set } from "firebase/database";
 const initialState: ItemsState = {
     items: [],
     isLoading: true,
+    uploadingCount: 0,
     error: false,
 }
 
@@ -13,6 +14,12 @@ export const ItemsSlice = createSlice({
     name: 'items',
     initialState,
     reducers: {
+        setUploadingCount(state, action: PayloadAction<number>){
+            state.uploadingCount = action.payload
+        },
+        uploadingCountDecrement(state, action: PayloadAction<any>){
+            state.uploadingCount = state.uploadingCount - 1
+        },
         fetchItems(state, action: PayloadAction<boolean>){
             state.isLoading = action.payload
         },
@@ -27,7 +34,6 @@ export const ItemsSlice = createSlice({
         addItem(state, action: PayloadAction<ItemType>){
             const item = action.payload
             state.items = [...state.items, item]
-            state.isLoading = false
         },
         removeItem(state, action: PayloadAction<number>){
             const id = action.payload
