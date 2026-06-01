@@ -65,19 +65,17 @@ const Page = () => {
     return (
         <>
             <h1 className='heading'>Моя музыка</h1>
+            <div className={cl.items}>
             {
                 isLoading
                     ? <Loading />
                     : error
                         ? <h2>Произошла ошибка</h2>
                         : items.length
-                            ? <div className={cl.items}>
-                                {
-                                    [...items].reverse().map(item => <Item key={item.id} item={item} onClick={setSong} playlist={''} />)
-                                }
-                            </div> 
+                            ? [...items].reverse().map(item => <Item key={item.id} item={item} onClick={setSong} playlist={''} />)
                             : <h2>У вас нет музыки</h2>      
-            }    
+            } 
+            </div>
             <div className={cl.playerContainer}>
                 {
                     url

@@ -1,7 +1,5 @@
-import { get } from "firebase/database"
 import {ItemsSlice} from "../store/reducers/ItemsSlice"
 import { ItemsActionType } from "../types/ItemsActionTypes"
-import { deleteObject, uploadBytes } from "firebase/storage"
 import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 import {supabase} from "./supabase";
 import { Dispatch } from "@reduxjs/toolkit";

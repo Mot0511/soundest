@@ -41,7 +41,7 @@ const Nav = () => {
         <div className={cl.nav}>
             <h1 className={cl.heading}><Link href='/'>Soundest</Link></h1>
             <ul className={cl.menu}>
-                <li><Link href='/'>Моя музыка</Link></li>
+                <li><Link href='/me'>Моя музыка</Link></li>
                 <li><Link href='/me/playlists'>Плейлисты</Link></li>
             </ul>
             <div>

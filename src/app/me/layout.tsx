@@ -22,7 +22,7 @@ const layout = ({children}: {children: React.ReactNode}) => {
         </div>
       </div>
     </Provider>
-  );
+  ); 
 };
 
 export default layout;
