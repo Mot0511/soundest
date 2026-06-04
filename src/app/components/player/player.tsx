@@ -27,7 +27,7 @@ const Player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
     
     const rewind = () => {
         const value = Number(progressBarRef?.current?.value)
-        if (audioRef.current){
+        if (audioRef.current && audioRef.current.currentTime != Infinity){
             audioRef.current.currentTime = value;
         }
         setSeconds(value)
@@ -39,19 +39,35 @@ const Player = ({data, leaf, isPlaying, setIsPlaying}: PlayerType) => {
             }
             setSeconds(audioRef?.current?.currentTime)
         })
+
+        audioRef.current!.addEventListener('loadedmetadata', () => {
+            if (audioRef.current!.duration === Infinity || isNaN(Number(audioRef.current!.duration))) {
+                audioRef.current!.currentTime = 1e101
+                setDuration(0)
+                audioRef.current!.addEventListener('timeupdate', getDuration)
+            } else {
+                setDuration(audioRef.current!.duration)
+            }
+        })
+
         return () => clearInterval(interval)
     }, [])
+
+    const getDuration = (event: any) => {
+        event.target.currentTime = 0
+        event.target.removeEventListener('timeupdate', getDuration)
+        setDuration(event.target.duration)
+    }
+
     useEffect(() => {
         if (seconds == duration){
-            console.log(1);
             leaf()
         }
     }, [seconds])
 
     useEffect(() => {
         console.log(audioRef)
-        setDuration(audioRef?.current?.duration)
-    }, [audioRef?.current?.duration])
+    }, [audioRef.current?.duration])
 
     return (
         <div className={cl.player}>

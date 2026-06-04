@@ -26,11 +26,11 @@ const Page = () => {
     const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
     const {items, isLoading, error, uploadingCount} = useTypedSelector(states => states.items)
-    const {list} = useTypedSelector(states => states.playlists)
+    const {playlists} = useTypedSelector(states => states.playlists)
 
     useEffect(() => {
         !items.length && getItems(dispatch)
-        getPlaylists(dispatch)
+        !playlists.length && getPlaylists(dispatch)
     }, [])
     
 
@@ -81,10 +81,10 @@ const Page = () => {
                                     Array.from({length: uploadingCount}, (v, k) => <Shimmer />)
                                 }
                                 {
-                                    [...items].reverse().map(item => <Item key={item.id} item={item} onClick={setSong} playlist={''} />)
+                                    [...items].reverse().map(item => <Item key={item.id} item={item} onClick={setSong} playlistID={null} />)
                                 }
                             </>
-                            : <h2>У вас нет музыки</h2>      
+                            : <h2>У вас нет музыки</h2>
             } 
             </div>
             <div className={cl.playerContainer}>

@@ -18,7 +18,7 @@ import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 import { addItemToPlaylist, removeItemFromPlaylist } from '@/app/services/fetchPlaylists';
 import { editItem, removeItem } from '@/app/services/fetchItems'
 
-const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: number) => void, playlist: string}) => {
+const Item = ({item, onClick, playlistID=null}: {item: ItemType, onClick: (id: number) => void, playlistID: number | null}) => {
 
     const [title, setTitle] = useState<string>(item.title)
     const [author, setAuthor] = useState<string>(item.author)
@@ -28,27 +28,15 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
 
     const dispatch = useTypedDispatch()
     const {addItem} = PlaylistsSlice.actions
-    const {list, isLoading, error} = useTypedSelector(states => states.playlists)
-
-    const objMap = (obj: any) => {
-        const array: React.ReactNode[] = []
-        for (let i in obj){
-            array.push(
-            <div className={cl.item+' '+cl.itemActive} onClick={() => {
-                setIsAdding(!isAdding)
-                addItemToPlaylist(dispatch, item.id, i)
-            }}>
-                <p className={cl.title}>{i}</p>
-            </div>)
-        }
-        return array
-    }
+    const {playlists, isLoading, error} = useTypedSelector(states => states.playlists)
     
     const remove = () => {
-        removeItem(dispatch, item.id, list, item.format)
+        removeItem(dispatch, item.id, playlists, item.format)
     }
     const removeFromPlaylist = () => {
-        removeItemFromPlaylist(dispatch, item.id, playlist)
+        if (playlistID) {
+            removeItemFromPlaylist(dispatch, item.id, playlistID)
+        }
     }
 
     return (
@@ -89,7 +77,7 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
                         </IconContext.Provider>
                     </Fillbutton>
 
-                    : <Fillbutton onClick={playlist ? removeFromPlaylist : remove} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
+                    : <Fillbutton onClick={playlistID ? removeFromPlaylist : remove} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
                     <IconContext.Provider value={{size: '2em', color: '#fff'}}>
                         <RxCross2 />
                     </IconContext.Provider>
@@ -107,7 +95,16 @@ const Item = ({item, onClick, playlist=''}: {item: ItemType, onClick: (id: numbe
                             ? <h2>Произошла ошибка</h2>
                             : <>
                             <h3>Выберите плейлист</h3>
-                            {objMap(list)}
+                            {
+                                playlists.map(playlist => 
+                                    <div className={cl.item+' '+cl.itemActive} onClick={() => {
+                                        setIsAdding(!isAdding)
+                                        addItemToPlaylist(dispatch, item.id, playlist.id)
+                                    }}>
+                                        <p className={cl.title}>{playlist.name}</p>
+                                    </div>
+                                )
+                            }
                             </>
                     : ''
                 }

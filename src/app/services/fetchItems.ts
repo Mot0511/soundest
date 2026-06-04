@@ -77,7 +77,7 @@ export const addItem = async (files: any, dispatch: Dispatch<ItemsActionType>) =
     }
 }
 
-export const removeItem = async (dispatch: Dispatch<{type: any, payload: number | boolean}>, id: number, list: {}, format?: string) => {
+export const removeItem = async (dispatch: Dispatch<{type: any, payload: number | boolean}>, id: number, playlists: PlaylistType[], format?: string) => {
     const {fetchItems, removeItem} = ItemsSlice.actions
     const userdata = await supabase.auth.getUser();
     const uid = userdata.data.user?.id;
@@ -90,10 +90,11 @@ export const removeItem = async (dispatch: Dispatch<{type: any, payload: number 
             fileId: String(id)
         })
         // await supabase.storage.from('main').remove([`songs/${uid}/${id}.${ext}`]);
-        for (let playlist in list){
+        for (let playlist in playlists){
             //@ts-ignore
-            if (list[playlist].includes(id)){
-                removeItemFromPlaylist(dispatch, id, playlist)
+            if (playlist.items.includes(id)){
+            //@ts-ignore
+                removeItemFromPlaylist(dispatch, id, playlist.id)
             }
         }
     }

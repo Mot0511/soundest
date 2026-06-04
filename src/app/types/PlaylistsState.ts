@@ -1,5 +1,5 @@
 export interface PlaylistsState {
-    list: any
+    playlists: PlaylistType[]
     isLoading: boolean
     error: boolean
 }

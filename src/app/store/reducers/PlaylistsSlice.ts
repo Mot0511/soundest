@@ -1,9 +1,10 @@
 import { PlaylistsState } from "@/app/types/PlaylistsState";
+import { generateID } from "@/app/utils/generateID";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { set } from "firebase/database";
 
 const initialState: PlaylistsState = {
-    list: {},
+    playlists: [],
     isLoading: false,
     error: false
 }
@@ -15,44 +16,57 @@ export const PlaylistsSlice = createSlice({
         fetchPlaylists(state, action: PayloadAction<boolean>){
             state.isLoading = action.payload
         },
-        fetchPlaylistsSuccess(state, action: PayloadAction<any>){
+        fetchPlaylistsSuccess(state, action: PayloadAction<PlaylistType[]>){
             state.isLoading = false
-            state.list = action.payload
+            state.playlists = action.payload
         },
         fetchPlaylistsError(state, action: PayloadAction<boolean>){
             state.isLoading = false
             state.error = action.payload
         },
-        addItem(state, action: PayloadAction<[string, number]>){
-            const name = action.payload[0]
-            const item = action.payload[1]
-            state.list[name] = [...state.list[name], item]
+        addItem(state, action: PayloadAction<[number, number]>){
+            const itemID = action.payload[0]
+            const playlistID = action.payload[1]
+            for (let playlist of state.playlists){
+                if (playlist.id == playlistID){
+                    playlist.items.push(itemID)
+                    break
+                }
+            }
             state.isLoading = false
         },
-        removeItem(state, action: PayloadAction<[string, number]>){
-            state.isLoading = true
-            const name = action.payload[0]
-            const id = action.payload[1]
-            console.log(id)
-            state.list[name] = state.list[name].filter((el: number) => el != id)
+        removeItem(state, action: PayloadAction<[number, number]>){
+            const itemID = action.payload[0]
+            const playlistID = action.payload[1]
+            for (let playlist of state.playlists){
+                if (playlist.id == playlistID){
+                    playlist.items = playlist.items.filter((item: number) => item != itemID)
+                }
+            }
             state.isLoading = false
         },
-        addPlaylist(state, action: PayloadAction<string>){
-            const name = action.payload
-            state.list[name] = []
-            state.isLoading = false
+        addPlaylist(state, action: PayloadAction<[number, string]>){
+            const id = action.payload[0]
+            const name = action.payload[1]
+            state.playlists.push({
+                id: id,
+                name: name,
+                items: []
+            })
         },
-        editPlaylist(state, action: PayloadAction<[string, string]>){
-            const name = action.payload[0]
+        editPlaylist(state, action: PayloadAction<[number, string]>){
+            const playlistID = action.payload[0]
             const newName = action.payload[1]
-            const playlist = state.list[name]
-            delete state.list[name]
-            state.list[newName] = playlist
+            for (let playlist of state.playlists){
+                if (playlist.id == playlistID){
+                    playlist.name = newName
+                    break
+                }
+            }
         },
-        removePlaylist(state, action: PayloadAction<string>){
-            const name = action.payload
-            delete state.list[name]
-            state.isLoading = false
+        removePlaylist(state, action: PayloadAction<number>){
+            const playlistID = action.payload
+            state.playlists = state.playlists.filter((playlist: PlaylistType) => playlist.id != playlistID)
         }
 }})
 

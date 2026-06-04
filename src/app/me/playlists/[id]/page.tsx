@@ -17,26 +17,34 @@ import { getItems, getURL } from '@/app/services/fetchItems';
 import { supabase } from '@/app/services/supabase';
 
 const Page = () => {
-    const name = decodeURIComponent(useParams<{name: string}>().name)
+    const playlistID = decodeURIComponent(useParams<{id: string}>().id)
+    const [playlist, setPlaylist] = useState<PlaylistType>();
     const [isPlaying, setIsPlaying] = useState<boolean>(false);  
     const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
 
     const dispatch = useTypedDispatch()
     const [items, setItems] = useState<ItemType[]>([])
-    const {list, isLoading: isLoadingPlaylists} = useTypedSelector(states => states.playlists)
+    const {playlists, isLoading: isLoadingPlaylists} = useTypedSelector(states => states.playlists)
     const {items: Allitems, isLoading, error} = useTypedSelector(states => states.items)
 
     useEffect(() => {
-        !list.length && getPlaylists(dispatch)
+        !playlists.length && getPlaylists(dispatch)
         !Allitems.length && getItems(dispatch)
-        setItems(Allitems.filter((item: ItemType) => item != undefined && list[name].includes(item.id)))
+        const playlist = playlists.find((i) => i.id.toString() === playlistID)
+        if (playlist) {
+            setItems(Allitems.filter((item: ItemType) => item != undefined && playlist.items.includes(item.id)))
+        }
+        setPlaylist(playlist)
     }, [])
 
     useEffect(() => {
         if (isLoading) return
-        setItems(Allitems.filter((item: ItemType) => item != undefined && list[name].includes(item.id)))
-    }, [list]) 
+        const playlist = playlists.find((i) => i.id.toString() === playlistID)
+        if (playlist) {
+            setItems(Allitems.filter((item: ItemType) => item != undefined && playlist.items.includes(item.id)))
+        }
+    }, [playlists, Allitems]) 
     
     const setSong = (id: number) => {
         for (let i in items){
@@ -67,16 +75,16 @@ const Page = () => {
 
     return (
         <>
-            <h1 className='heading'>{name}</h1>
+            <h1 className='heading'>{playlist && playlist.name}</h1>
             <div className={cl.items}>
             {
                 isLoading
                     ? <Loading />
-                    : error
+                    : error || !playlist
                         ? <h2>Произошла ошибка</h2>
                         : Allitems.length
                             ? items.length
-                                ? items.map(item => <Item key={item.id} item={item} onClick={setSong} playlist={name} />)                                
+                                ? items.map(item => <Item key={item.id} item={item} onClick={setSong} playlistID={playlist.id} />)                                
                                 : <h2>В плейлисте нет музыки</h2>
                             : <h2>У вас нет музыки</h2>
             }

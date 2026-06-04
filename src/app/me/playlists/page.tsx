@@ -20,23 +20,15 @@ import { GSP_NO_RETURNED_VALUE } from 'next/dist/lib/constants';
 const Page = () => {
     // const [cookies, setCookie, removeCookie] = useCookies();
     
-    const {list, isLoading, error} = useTypedSelector(states => states.playlists)
+    const {playlists, isLoading, error} = useTypedSelector(states => states.playlists)
     const dispatch = useTypedDispatch()
     const [isCreating, setIsCreating] = useState<boolean>(false)
     const [name, setName] = useState<string>('')
 
     useEffect(() => {
-        !Object.keys(list).length && getPlaylists(dispatch)
+        !playlists.length && getPlaylists(dispatch)
     }, [])
-
-    const objMap = (obj: any) => {
-        const array: React.ReactNode[] = []
-        for (let i in obj){
-            array.push(<Playlist name={i} data={obj[i]} />)
-        }
-        return array
-    }
-
+    
     const createPlaylist = () => {
         if (!name) return
         addPlaylist(dispatch, name)
@@ -63,7 +55,9 @@ const Page = () => {
                         ? <Loading />
                         : error
                             ? <h2>Произошла ошибка</h2>
-                            : objMap(list)
+                            : playlists.map(playlist => 
+                                <Playlist playlist={playlist} />
+                            )
                 }
             </div>
         </div>
