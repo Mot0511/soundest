@@ -17,14 +17,14 @@ const MobileNav = () => {
 
     const dispatch = useTypedDispatch()
     const {fetchItems} = ItemsSlice.actions
-    const isLoading = useTypedSelector(states => states.items.isLoading)
+    const {isLoading, selectedFolder} = useTypedSelector(states => states.items)
     const router = useRouter()
     const [isMenuExpanded, setIsMenuExpanded] = useState<Boolean>(false)
     
     const uploadSong = async () => {
         const files = (document.getElementById('file') as HTMLInputElement).files
         const user = await supabase.auth.getUser();
-        user && addItem(files, dispatch)
+        user && addItem(files, dispatch, selectedFolder)
     }
 
     const logout = async () => {
