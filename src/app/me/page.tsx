@@ -81,7 +81,10 @@ const Page = () => {
                         <Loading />
                     </div>
                     : error
-                        ? <h2>Произошла ошибка</h2>
+                        ? <div>
+                            <h2>Произошла ошибка</h2>
+                            <p>{error}</p>
+                        </div>
                         : items.length
                             ? <>
                                 {

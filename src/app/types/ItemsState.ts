@@ -7,5 +7,5 @@ export interface ItemsState {
     isLoading: boolean,
     uploadingCount: {[key: string]: number}
     selectedFolder: string,
-    error: boolean,
+    error: string,
 }

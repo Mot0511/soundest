@@ -24,7 +24,7 @@ export const getItems = async (dispatch: Dispatch<ItemsActionType>) => {
     const userdata = await supabase.auth.getUser()
     const uid = userdata.data.user?.id;
     if (uid) {
-        try {
+        // try {
             const {data} = await supabase.from('songs').select('id, title, author, file_ext, path').eq('uid', uid)
             if (data) {
                 const normalized: ItemType[] = data.map((row) => ({
@@ -35,9 +35,9 @@ export const getItems = async (dispatch: Dispatch<ItemsActionType>) => {
             } else {
                 dispatch(fetchItemsSuccess([]))
             }
-        } catch (e) {
-            dispatch(fetchItemsError(true))
-        }
+        // } catch (e: any) {
+        //     dispatch(fetchItemsError(e.message))
+        // }
     }
 }
 

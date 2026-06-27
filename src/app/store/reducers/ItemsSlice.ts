@@ -10,7 +10,7 @@ const initialState: ItemsState = {
     isLoading: true,
     uploadingCount: {},
     selectedFolder: '/',
-    error: false,
+    error: '',
 }
 
 export const ItemsSlice = createSlice({
@@ -25,9 +25,9 @@ export const ItemsSlice = createSlice({
             state.items = action.payload
             state.tree = buildTree(state.items);
         },
-        fetchItemsError(state, action: PayloadAction<any>){
+        fetchItemsError(state, action: PayloadAction<string>){
             state.isLoading = false
-            state.error = true
+            state.error = action.payload
         },
         addItem(state, action: PayloadAction<ItemType>){
             const item = action.payload

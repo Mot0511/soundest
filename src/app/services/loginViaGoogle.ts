@@ -7,8 +7,7 @@ export default async (callback: () => void) => {
     await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            // redirectTo: 'http://localhost:3000'
-            redirectTo: 'https://dkwzyarpuwowkvmyltqw.supabase.co/auth/v1/callback'
+            redirectTo: process.env.NODE_ENV == 'development' ? 'http://localhost:3000' : 'https://dkwzyarpuwowkvmyltqw.supabase.co/auth/v1/callback'
         }
     })
 
