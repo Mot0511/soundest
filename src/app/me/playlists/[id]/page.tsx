@@ -84,7 +84,7 @@ const Page = () => {
                         ? <h2>Произошла ошибка</h2>
                         : Allitems.length
                             ? items.length
-                                ? items.map(item => <Item key={item.id} item={item} onClick={setSong} playlistID={playlist.id} />)                                
+                                ? items.map(item => <Item key={item.id} item={item} onClick={setSong} playlistID={playlist.id} isCardColor={true}/>)                                
                                 : <h2>В плейлисте нет музыки</h2>
                             : <h2>У вас нет музыки</h2>
             }

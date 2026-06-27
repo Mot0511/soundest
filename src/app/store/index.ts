@@ -1,10 +1,12 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import ItemsSlice from "./reducers/ItemsSlice";
 import PlaylistsSlice from "./reducers/PlaylistsSlice";
+import NotificationsSlice from "./reducers/NotificationsSlice";
 
 const rootReducer = combineReducers({
     items: ItemsSlice,
     playlists: PlaylistsSlice,
+    notifications: NotificationsSlice,
 })
 
 export const setupStore = () => {

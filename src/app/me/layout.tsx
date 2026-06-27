@@ -5,6 +5,7 @@ import Nav from '../components/nav/nav'
 import MobileNav from '../components/mobileNav/mobileNav'
 import { Provider } from 'react-redux';
 import { setupStore } from '../store';
+import Notification from '../components/notification/notification';
 
 const layout = ({children}: {children: React.ReactNode}) => {
 
@@ -27,6 +28,7 @@ const layout = ({children}: {children: React.ReactNode}) => {
         <div className="page">
           {children}
         </div>
+        <Notification />
       </div>
     </Provider>
   ); 

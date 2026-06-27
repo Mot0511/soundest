@@ -1,8 +1,11 @@
+import EntityType from "./EntityType";
 import ItemType from "./ItemType";
 
 export interface ItemsState {
-    items: ItemType[]
+    items: ItemType[],
+    tree: EntityType[],
     isLoading: boolean,
-    uploadingCount: number
+    uploadingCount: {[key: string]: number}
+    selectedFolder: string,
     error: boolean,
 }

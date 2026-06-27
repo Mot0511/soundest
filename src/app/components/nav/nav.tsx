@@ -14,6 +14,7 @@ import { get, set } from 'firebase/database';
 import { getDownloadURL, uploadBytes } from 'firebase/storage';
 import ItemType from '@/app/types/ItemType';
 import { supabase } from '@/app/services/supabase';
+import { NotificationsSlice } from '@/app/store/reducers/NotificationsSlice';
 
 const Nav = () => {
 
@@ -21,14 +22,25 @@ const Nav = () => {
     
     const dispatch = useTypedDispatch()
     const {fetchItems} = ItemsSlice.actions
-    const isLoading = useTypedSelector(states => states.items.isLoading)
-    const router = useRouter()
-    
+    const {showNotification, hideNotification} = NotificationsSlice.actions
+    const {isLoading, selectedFolder, items} = useTypedSelector(states => states.items)
+    const router = useRouter()  
     
     const uploadSong = async () => {
         const files = (document.getElementById('file') as HTMLInputElement).files
+        if (!files) return
+        if (items.length + files.length > 20) {
+            dispatch(showNotification([
+                'Превышен лимит хранилища треков',
+                `Больше 20 треков пока загружать нельзя. У вас их сейчас ${items.length}.`
+            ]))
+            setTimeout(() => {
+                dispatch(hideNotification())
+            }, 5000)
+            return 
+        }
         const user = await supabase.auth.getUser()
-        user && addItem(files, dispatch)
+        user && addItem(files, dispatch, selectedFolder)
     }
 
     const logout = async () => {
@@ -44,6 +56,9 @@ const Nav = () => {
                 <li><Link href='/me/playlists'>Плейлисты</Link></li>
             </ul>
             <div>
+                <p className={cl.tg_link}>
+                    Подписывайся на Soundest в <a href="https://t.me/soundest_channel" target='_blank'>Telegram</a>
+                </p>
                 <input multiple onChange={uploadSong} type="file" id='file' hidden accept='.mp3,.flac,.wav,.m4a,audio/mpeg,audio/flac,audio/wav,audio/wave,audio/x-wav,audio/mp4,audio/x-m4a' />
                 <Fillbutton style={{marginBottom: '10px', width: '100%'}} fullwidth={'true'}><label htmlFor='file'>Загрузить музыку</label></Fillbutton>
                 <Fillbutton onClick={logout} style={{marginBottom: '50px', width: '100%', height: '40px'}} fullwidth={'true'}>Выйти</Fillbutton>

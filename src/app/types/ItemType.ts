@@ -4,4 +4,5 @@ export default interface ItemType {
     author: string
     /** Расширение файла в хранилище (mp3, flac, wav, m4a). Старые записи без поля считаются mp3. */
     format?: string
+    path: string
 }

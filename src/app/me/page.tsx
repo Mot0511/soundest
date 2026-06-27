@@ -18,6 +18,8 @@ import Head from 'next/head';
 import { getAnalytics } from 'firebase/analytics';
 import { supabase } from '../services/supabase';
 import Shimmer from '../components/shimmer/shimmer';
+import buildReactTree from '../utils/buildReactTree';
+import { ItemsSlice } from '../store/reducers/ItemsSlice';
 
 const Page = () => {
 
@@ -25,7 +27,8 @@ const Page = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [url, setUrl] = useState<string>('')
     const [step, setStep] = useState<number>(0)
-    const {items, isLoading, error, uploadingCount} = useTypedSelector(states => states.items)
+    const {items, tree, isLoading, error, uploadingCount} = useTypedSelector(states => states.items)
+    const {setFolder} = ItemsSlice.actions
     const {playlists} = useTypedSelector(states => states.playlists)
 
     useEffect(() => {
@@ -63,8 +66,12 @@ const Page = () => {
         }
     }
 
+    const setRootFolder = () => {
+        dispatch(setFolder('/'))
+    }
+
     return (
-        <>
+        <div className={cl.main} onClick={setRootFolder}>
             <h1 className='heading'>Моя музыка</h1>
             <div className={cl.items}>
             
@@ -78,10 +85,15 @@ const Page = () => {
                         : items.length
                             ? <>
                                 {
-                                    Array.from({length: uploadingCount}, (v, k) => <Shimmer />)
+                                    Array.from({length: uploadingCount['/']}, (v, k) => <Shimmer />)
                                 }
                                 {
-                                    [...items].reverse().map(item => <Item key={item.id} item={item} onClick={setSong} playlistID={null} />)
+                                    buildReactTree(
+                                        [...tree].reverse(),
+                                        true,
+                                        true,
+                                        setSong
+                                    )
                                 }
                             </>
                             : <h2>У вас нет музыки</h2>
@@ -96,7 +108,7 @@ const Page = () => {
                         : <></>
                 }
             </div>
-        </>
+        </div>
     );
 };
 

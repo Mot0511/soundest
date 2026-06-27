@@ -17,6 +17,7 @@
 body{
     height: 100vh;
     background-color:  #0f0f0f;
+    overflow-x: hidden
 }
 .service{
     height: 100vh;
@@ -41,6 +42,12 @@ a:hover{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.bg-primary-color {
+    background-color: #1C1C1C
+}
+.bg-secondary-color {
+    background-color: #141414
 }
 @media screen and (max-width: 840px){
     .page{

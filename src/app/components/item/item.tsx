@@ -18,7 +18,7 @@ import { PlaylistsSlice } from '@/app/store/reducers/PlaylistsSlice';
 import { addItemToPlaylist, removeItemFromPlaylist } from '@/app/services/fetchPlaylists';
 import { editItem, removeItem } from '@/app/services/fetchItems'
 
-const Item = ({item, onClick, playlistID=null}: {item: ItemType, onClick: (id: number) => void, playlistID: number | null}) => {
+const Item = ({item, onClick, playlistID=null, isCardColor}: {item: ItemType, onClick: (id: number) => void, playlistID: number | null, isCardColor: boolean}) => {
 
     const [title, setTitle] = useState<string>(item.title)
     const [author, setAuthor] = useState<string>(item.author)
@@ -30,24 +30,63 @@ const Item = ({item, onClick, playlistID=null}: {item: ItemType, onClick: (id: n
     const {addItem} = PlaylistsSlice.actions
     const {playlists, isLoading, error} = useTypedSelector(states => states.playlists)
     
-    const remove = () => {
+    const remove = (e: any) => {
+        e.stopPropagation()
         removeItem(dispatch, item.id, playlists, item.format)
     }
-    const removeFromPlaylist = () => {
+    const removeFromPlaylist = (e: any) => {
+        e.stopPropagation()
         if (playlistID) {
             removeItemFromPlaylist(dispatch, item.id, playlistID)
         }
     }
 
+    const onTap = (e: any) => {
+        e.stopPropagation()
+        onClick(item.id)
+    }
+
+    const onSetIsEditing = (e: any) => {
+        e.stopPropagation()
+        setIsEditing(true)
+    }
+
+    const onSetIsAdding = (e: any) => {
+        e.stopPropagation()
+        setIsAdding(true)
+    }
+
+    const onEdit = (e: any) => {
+        e.stopPropagation()
+        editItem(dispatch, item.id, title, author)
+        setIsEditing(false)
+    }
+
     return (
         <div>
         <div className={cl.itemContainer}>
-            <div className={cl.item + ' ' + (isEditing ? '' : cl.itemActive)} onClick={isEditing ? undefined : () => onClick(item.id)}>
+            <div 
+                className={cl.item + ' ' + (isEditing ? '' : cl.itemActive) + ' ' + (isCardColor ? 'bg-primary-color' : 'bg-secondary-color')}
+                onClick={isEditing ? undefined : onTap}
+            >
             {
                 isEditing
                     ? <>
-                        <Myinput text='Название' value={title} onChange={(e: any) => setTitle(e.target.value)} style={{marginRight: '10px', marginBottom: typeof window !== 'undefined' && window.screen.width < 840 ? '10px' : '0'}} />
-                        <Myinput text='Автор' value={author} onChange={(e: any) => setAuthor(e.target.value)} />
+                        <Myinput 
+                            text='Название' 
+                            value={title} 
+                            onClick={(e: any) => e.stopPropagation()} 
+                            onChange={(e: any) => setTitle(e.target.value)} 
+                            style={{marginRight: '10px', marginBottom: typeof window !== 'undefined' && window.screen.width < 840 ? '10px' : '0'}} 
+                            onKeyPress={(e: any) => e.key == 'Enter' && onEdit(e)}
+                        />
+                        <Myinput 
+                            text='Автор' 
+                            value={author} 
+                            onClick={(e: any) => e.stopPropagation()} 
+                            onChange={(e: any) => setAuthor(e.target.value)}
+                            onKeyPress={(e: any) => e.key == 'Enter' && onEdit(e)}
+                        />
                     </>
                     : <>
                         <p className={cl.title}>{item.title}</p>
@@ -55,29 +94,25 @@ const Item = ({item, onClick, playlistID=null}: {item: ItemType, onClick: (id: n
                     </>
             }
             </div>
-            <Fillbutton onClick={() => setIsAdding(true)} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
+            <Fillbutton isSecondaryColor={!isCardColor} onClick={onSetIsAdding} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
                     <IconContext.Provider value={{size: '2em', color: '#fff'}}>
                         <GoPlus />
                     </IconContext.Provider>
             </Fillbutton>
-            <Fillbutton onClick={() => setIsEditing(true)} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
+            <Fillbutton isSecondaryColor={!isCardColor} onClick={onSetIsEditing} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
                     <IconContext.Provider value={{size: '2em', color: '#fff'}}>
                         <MdEdit />
                     </IconContext.Provider>
             </Fillbutton>
             {
                 isEditing
-                    ? <Fillbutton onClick={() => {
-                        editItem(dispatch, item.id, title, author)
-                        setIsEditing(false)
-
-                    }} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
+                    ? <Fillbutton isSecondaryColor={!isCardColor} onClick={onEdit} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
                         <IconContext.Provider value={{size: '2em', color: '#fff'}}>
                             <FaCheck />
                         </IconContext.Provider>
                     </Fillbutton>
 
-                    : <Fillbutton onClick={playlistID ? removeFromPlaylist : remove} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
+                    : <Fillbutton isSecondaryColor={!isCardColor} onClick={playlistID ? removeFromPlaylist : remove} style={{width: '50px', height: '50px', marginLeft: '10px', padding: '0'}}>
                     <IconContext.Provider value={{size: '2em', color: '#fff'}}>
                         <RxCross2 />
                     </IconContext.Provider>
@@ -86,7 +121,6 @@ const Item = ({item, onClick, playlistID=null}: {item: ItemType, onClick: (id: n
             
         </div>
         <div className={cl.selectPlaylist}>
-        
             {
                 isAdding 
                     ? isLoading
@@ -97,7 +131,8 @@ const Item = ({item, onClick, playlistID=null}: {item: ItemType, onClick: (id: n
                             <h3>Выберите плейлист</h3>
                             {
                                 playlists.map(playlist => 
-                                    <div className={cl.item+' '+cl.itemActive} onClick={() => {
+                                    <div className={cl.item+' '+cl.itemActive+' '+(isCardColor ? 'bg-primary-color' : 'bg-secondary-color')} onClick={(e: any) => {
+                                        e.stopPropagation()
                                         setIsAdding(!isAdding)
                                         addItemToPlaylist(dispatch, item.id, playlist.id)
                                     }}>
