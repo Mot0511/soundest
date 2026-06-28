@@ -17,11 +17,13 @@ const buildTree = (items: ItemType[]) => {
         }
 
         const parts = path.split('/').filter(Boolean)
+        console.log('path:', path, 'parts:', parts, 'parts.length:', parts.length)
         let currentLevel: EntityType[] = root
         let currentPath = ''
 
-        for (let i = 0; i < parts.length - 1; i++) {
+        for (let i = 0; i < parts.length; i++) {
             currentPath += !currentPath ? parts[i] : `/${parts[i]}`
+            console.log('creating folder:', currentPath)
             let folder: FolderType = folderMap[currentPath]
             if (!folder) {
                 folder = {
